@@ -2,3 +2,7 @@
 !.gitignore
 !nvim/
 !nvim/*
+!alacritty/
+!alacritty/*
+!tmux/
+!tmux/*
