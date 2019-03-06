@@ -6,3 +6,5 @@
 !alacritty/*
 !tmux/
 !tmux/*
+!fish/
+!fish/config.fish
