@@ -3,4 +3,4 @@ fundle plugin 'edc/bass'
 fundle plugin 'franciscolourenco/done'
 fundle plugin 'fishpkg/fish-humanize-duration'
 fundle init
-bass source ~/.bash_profile
+if test -e ~/.bash_profile; bass source ~/.bash_profile; end;
