@@ -84,7 +84,7 @@ let g:neomake_make_maker = {
 let g:neomake_markdown_enabled_makers = ['make']
 
 " NERDTree
-map <F9> :NERDTreeToggle<CR>
+map <F7> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
