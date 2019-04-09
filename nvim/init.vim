@@ -80,3 +80,5 @@ map <F9> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
+
+autocmd! bufwritepost init.vim source %
