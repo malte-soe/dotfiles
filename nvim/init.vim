@@ -43,8 +43,8 @@ colorscheme base16-default-dark
 
 " Snippets
 let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsJumpForwardTrigger='<c-f>'
+let g:UltiSnipsJumpBackwardTrigger='<c-b>'
 
 " Docstring
 let g:snips_author = 'Malte Sönnichsen'
@@ -76,7 +76,7 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
+map <F9> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
