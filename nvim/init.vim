@@ -34,6 +34,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'majutsushi/tagbar'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rhysd/vim-grammarous'
+Plug 'neomake/neomake'
 call plug#end()
 
 " Colorscheme
@@ -74,6 +75,13 @@ let g:ale_rust_rls_toolchain = 'stable'
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+
+" Neomake
+map <F9> :Neomake!<CR>
+let g:neomake_make_maker = {
+    \ 'exe': 'make',
+    \ }
+let g:neomake_markdown_enabled_makers = ['make']
 
 " NERDTree
 map <F9> :NERDTreeToggle<CR>
