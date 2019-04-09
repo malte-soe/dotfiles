@@ -34,6 +34,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'majutsushi/tagbar'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rhysd/vim-grammarous'
+Plug 'neomake/neomake'
 call plug#end()
 
 " Colorscheme
@@ -43,8 +44,8 @@ colorscheme base16-default-dark
 
 " Snippets
 let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsJumpForwardTrigger='<c-f>'
+let g:UltiSnipsJumpBackwardTrigger='<c-b>'
 
 " Docstring
 let g:snips_author = 'Malte Sönnichsen'
@@ -75,8 +76,17 @@ let g:ale_rust_rls_toolchain = 'stable'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
+" Neomake
+map <F9> :Neomake!<CR>
+let g:neomake_make_maker = {
+    \ 'exe': 'make',
+    \ }
+let g:neomake_markdown_enabled_makers = ['make']
+
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
+map <F7> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
+
+autocmd! bufwritepost init.vim source %
