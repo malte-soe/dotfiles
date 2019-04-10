@@ -35,6 +35,7 @@ Plug 'majutsushi/tagbar'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'neomake/neomake'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 " Colorscheme
