@@ -24,6 +24,7 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.local/share/nvim/plugged')
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'chriskempson/base16-vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -71,6 +72,8 @@ let g:ale_linters = {
 \}
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_rust_rls_toolchain = 'stable'
+
+map <c-[> :ALEGoToDefinitionInTab<CR>
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
