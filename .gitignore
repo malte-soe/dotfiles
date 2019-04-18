@@ -8,3 +8,8 @@
 !tmux/*
 !fish/
 !fish/config.fish
+!fish/functions/
+!fish/functions/tmux.fish
+!ipython/
+!ipython/profile_default/
+!ipython/profile_default/ipython_config.py
