@@ -22,7 +22,7 @@ augroup fixers
   " Remove trailing spaces
   autocmd FileType c,cpp,java,php,python autocmd BufWritePre <buffer> %s/\s\+$//e
   " Remove trailing blank lines
-  autocmd BufWritePre * %s#\($\n\s*\)\+\%$##
+  autocmd BufWritePre * %s/\($\n\s*\)\+\%$//e
 augroup END
 
 " Plugins
