@@ -1,3 +1,4 @@
+set shell=/bin/sh
 set tabstop=4
 set shiftwidth=0
 set expandtab
@@ -24,16 +25,22 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.local/share/nvim/plugged')
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'chriskempson/base16-vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/nerdtree'
-Plug 'w0rp/ale'
+" Linting/Autocomplete
+"Plug 'w0rp/ale'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+" GUI
+Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'majutsushi/tagbar'
+" Navigation
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'rhysd/vim-grammarous'
 Plug 'neomake/neomake'
 Plug 'tpope/vim-fugitive'
@@ -42,7 +49,7 @@ call plug#end()
 " Colorscheme
 set termguicolors
 colorscheme base16-default-dark
-"hi Normal guibg=NONE ctermbg=NONE
+hi Normal guibg=NONE ctermbg=NONE
 
 " Snippets
 let g:UltiSnipsExpandTrigger='<tab>'
@@ -58,23 +65,23 @@ let g:snips_email = 'chacki@users.noreply.github.com'
 let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 
 " ALE
-let g:airline#extensions#ale#enabled = 1
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'python': ['black', 'add_blank_lines_for_python_control_statements', 'isort'],
-\}
-let g:ale_completion_enabled = 1
-let g:ale_completion_delay = 500
-set completeopt=menu,menuone,preview,noselect,noinsert
-let g:ale_linters = {
-\  'python': ['pyls'],
-\  'rust': ['rls'],
-\}
-let g:ale_python_black_options = '--line-length 79'
-let g:ale_rust_rls_toolchain = 'stable'
-
-map <c-[> :ALEGoToDefinitionInTab<CR>
+"let g:airline#extensions#ale#enabled = 1
+"let g:ale_fix_on_save = 1
+"let g:ale_fixers = {
+"\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+"\   'python': ['black', 'add_blank_lines_for_python_control_statements', 'isort'],
+"\}
+"let g:ale_completion_enabled = 1
+"let g:ale_completion_delay = 500
+"set completeopt=menu,menuone,preview,noselect,noinsert
+"let g:ale_linters = {
+"\  'python': ['pyls'],
+"\  'rust': ['rls'],
+"\}
+"let g:ale_python_black_options = '--line-length 79'
+"let g:ale_rust_rls_toolchain = 'stable'
+"
+"map <c-[> :ALEGoToDefinitionInTab<CR>
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
