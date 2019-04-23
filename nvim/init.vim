@@ -9,13 +9,21 @@ set scrolloff=7
 set clipboard=unnamed
 
 " hyprid number with auto toggling
-:set number relativenumber cursorline
+set number relativenumber cursorline
 
-:augroup numbertoggle
-:  autocmd!
-:  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber cursorline
-:  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline
-:augroup END
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber cursorline
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline
+augroup END
+
+augroup fixers
+  autocmd!
+  " Remove trailing spaces
+  autocmd FileType c,cpp,java,php,python autocmd BufWritePre <buffer> %s/\s\+$//e
+  " Remove trailing blank lines
+  autocmd BufWritePre * %s#\($\n\s*\)\+\%$##
+augroup END
 
 " Plugins
 " Load vim-plug
@@ -25,36 +33,45 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.local/share/nvim/plugged')
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'sheerun/vim-polyglot'
 " Linting/Autocomplete
 "Plug 'w0rp/ale'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-" GUI
+Plug 'honza/vim-snippets'
+" UI
+Plug 'sheerun/vim-polyglot'
 Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
-Plug 'majutsushi/tagbar'
 " Navigation
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'rhysd/vim-grammarous'
 Plug 'neomake/neomake'
+" GIT
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 " Colorscheme
 set termguicolors
 colorscheme base16-default-dark
-hi Normal guibg=NONE ctermbg=NONE
 
 " Snippets
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-f>'
-let g:UltiSnipsJumpBackwardTrigger='<c-b>'
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
 
 " Docstring
 let g:snips_author = 'Malte Sönnichsen'
