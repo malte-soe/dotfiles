@@ -36,9 +36,9 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Linting/Autocomplete
 "Plug 'w0rp/ale'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'honza/vim-snippets'
+    Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+        Plug 'honza/vim-snippets'
+    Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 " UI
 Plug 'sheerun/vim-polyglot'
 Plug 'chriskempson/base16-vim'
