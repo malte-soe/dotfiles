@@ -1,4 +1,3 @@
-set shell=/bin/sh
 set tabstop=4
 set shiftwidth=0
 set expandtab
@@ -35,10 +34,8 @@ endif
 call plug#begin('~/.local/share/nvim/plugged')
 " Linting/Autocomplete
 "Plug 'w0rp/ale'
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-    Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
-        Plug 'honza/vim-snippets'
-    Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
+Plug 'honza/vim-snippets'
 " UI
 Plug 'sheerun/vim-polyglot'
 Plug 'chriskempson/base16-vim'
@@ -49,15 +46,14 @@ Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'rhysd/vim-grammarous'
-Plug 'neomake/neomake'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 " Colorscheme
-set termguicolors
-colorscheme base16-default-dark
+"set termguicolors
+"colorscheme base16-default-dark
 
 " Snippets
 inoremap <silent><expr> <TAB>
