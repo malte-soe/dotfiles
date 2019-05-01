@@ -86,35 +86,9 @@ let g:snips_email = 'chacki@users.noreply.github.com'
 " LanguageTool
 let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 
-" ALE
-"let g:airline#extensions#ale#enabled = 1
-"let g:ale_fix_on_save = 1
-"let g:ale_fixers = {
-"\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-"\   'python': ['black', 'add_blank_lines_for_python_control_statements', 'isort'],
-"\}
-"let g:ale_completion_enabled = 1
-"let g:ale_completion_delay = 500
-"set completeopt=menu,menuone,preview,noselect,noinsert
-"let g:ale_linters = {
-"\  'python': ['pyls'],
-"\  'rust': ['rls'],
-"\}
-"let g:ale_python_black_options = '--line-length 79'
-"let g:ale_rust_rls_toolchain = 'stable'
-"
-"map <c-[> :ALEGoToDefinitionInTab<CR>
-
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
-
-" Neomake
-map <F9> :Neomake!<CR>
-let g:neomake_make_maker = {
-            \ 'exe': 'make',
-            \ }
-let g:neomake_markdown_enabled_makers = ['make']
 
 " NERDTree
 map <F7> :NERDTreeToggle<CR>
