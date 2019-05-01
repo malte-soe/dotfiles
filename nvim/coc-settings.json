@@ -1,7 +1,4 @@
 {
     "python.jediEnabled": true,
-    "coc.preferences.formatOnType": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": ["--line-length 79"],
     "python.linting.pylintUseMinimalCheckers": false 
 }
