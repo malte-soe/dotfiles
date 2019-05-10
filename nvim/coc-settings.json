@@ -1,4 +1,5 @@
 {
+    "coc.preferences.jumpCommand": "tabe",
     "python.jediEnabled": true,
     "python.linting.pylintUseMinimalCheckers": false 
 }
