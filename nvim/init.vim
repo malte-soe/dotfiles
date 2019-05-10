@@ -42,6 +42,8 @@ Plug 'rhysd/vim-grammarous'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+" Tools
+Plug 'neomake/neomake'
 call plug#end()
 
 " Colorscheme
@@ -96,6 +98,13 @@ let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+
+" Neomake
+map <F9> :Neomake!<CR>
+let g:neomake_make_maker = {
+            \ 'exe': 'make',
+            \ }
+let g:neomake_markdown_enabled_makers = ['make']
 
 " NERDTree
 map <F7> :NERDTreeToggle<CR>
