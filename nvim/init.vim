@@ -1,3 +1,4 @@
+let g:loaded_python_provider = 1
 set tabstop=4
 set shiftwidth=0
 set expandtab
@@ -53,7 +54,7 @@ let g:neoformat_run_all_formatters = 1
 let g:neoformat_python_black = {
             \ 'exe': 'black',
             \ 'stdin': 1,
-            \ 'args': ['--line-length 79', '-q', '-'],
+            \ 'args': ['--line-length 80', '-q', '-'],
             \ }
 let g:neoformat_enabled_python = ['black', 'isort']
 let g:neoformat_basic_format_align = 1
@@ -63,6 +64,12 @@ augroup format
     autocmd!
     autocmd BufWritePre * undojoin | Neoformat
 augroup END
+
+" LanguageServer
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Snippets
 inoremap <silent><expr> <TAB>
