@@ -44,6 +44,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " Tools
 Plug 'neomake/neomake'
+Plug 'matze/vim-move'
 call plug#end()
 
 " Colorscheme
