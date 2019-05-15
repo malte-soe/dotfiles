@@ -30,8 +30,8 @@ Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 Plug 'honza/vim-snippets'
 Plug 'sbdchd/neoformat'
 " UI
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'sheerun/vim-polyglot'
-Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Navigation
@@ -45,14 +45,16 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " Tools
 Plug 'neomake/neomake'
+" Keybindings
+Plug 'tpope/vim-unimpaired'
 call plug#end()
 
 " Colorscheme
 set termguicolors
 let base16colorspace=256
-colorscheme base16-solarized-dark
+colorscheme PaperColor
 let g:airline_powerline_fonts = 1
-let g:airline_theme='base16_solarized'
+let g:airline_theme='papercolor'
 
 " Format
 let g:neoformat_run_all_formatters = 1
