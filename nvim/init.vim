@@ -1,4 +1,5 @@
 let g:loaded_python_provider = 1
+let g:netrw_dirhistmax = 0
 set tabstop=4
 set shiftwidth=0
 set expandtab
@@ -6,6 +7,8 @@ set lazyredraw
 set showmatch
 set cc=80,100,120
 set scrolloff=7
+set autoread
+" Use system clipboard
 set clipboard=unnamed
 
 " hyprid number with auto toggling
@@ -35,18 +38,19 @@ Plug 'sheerun/vim-polyglot'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Navigation
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'rhysd/vim-grammarous'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " Tools
 Plug 'neomake/neomake'
+Plug 'rhysd/vim-grammarous'
 " Keybindings
-Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar' " Filemanager
+Plug 'tpope/vim-unimpaired' " Bracket navigation
 call plug#end()
 
 " Colorscheme
@@ -100,9 +104,8 @@ let g:snips_email = 'chacki@users.noreply.github.com'
 " LanguageTool
 let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 
-" CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+" Fuzzy file finder
+nnoremap <c-p> :FZF<cr>
 
 " Neomake
 map <F9> :Neomake!<CR>
@@ -110,9 +113,6 @@ let g:neomake_make_maker = {
             \ 'exe': 'make',
             \ }
 let g:neomake_markdown_enabled_makers = ['make']
-
-" NERDTree
-map <F7> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
