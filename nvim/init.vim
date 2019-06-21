@@ -51,6 +51,7 @@ Plug 'rhysd/vim-grammarous'
 " Keybindings
 Plug 'tpope/vim-vinegar' " Filemanager
 Plug 'tpope/vim-unimpaired' " Bracket navigation
+Plug 'tpope/vim-commentary' Commenting
 call plug#end()
 
 " Colorscheme
