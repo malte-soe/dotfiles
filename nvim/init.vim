@@ -8,12 +8,11 @@ set showmatch
 set cc=80,100,120
 set scrolloff=7
 set autoread
-" Use system clipboard
-set clipboard=unnamed
-
+set shortmess=I
+set scrolljump=10
+"
 " hyprid number with auto toggling
 set number relativenumber cursorline
-
 augroup numbertoggle
     autocmd!
     autocmd BufEnter,FocusGained,InsertLeave * set relativenumber cursorline
@@ -33,10 +32,9 @@ Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 Plug 'honza/vim-snippets'
 Plug 'sbdchd/neoformat'
 " UI
-Plug 'NLKNguyen/papercolor-theme'
+Plug 'arcticicestudio/nord-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 " Navigation
 Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -49,17 +47,14 @@ Plug 'airblade/vim-gitgutter'
 Plug 'neomake/neomake'
 Plug 'rhysd/vim-grammarous'
 " Keybindings
-Plug 'tpope/vim-vinegar' " Filemanager
+Plug 'tpope/vim-vinegar'    " Filemanager
 Plug 'tpope/vim-unimpaired' " Bracket navigation
 Plug 'tpope/vim-commentary' " Commenting
 call plug#end()
 
 " Colorscheme
-set termguicolors
-let base16colorspace=256
-colorscheme PaperColor
+colorscheme nord
 let g:airline_powerline_fonts = 1
-let g:airline_theme='papercolor'
 
 " Format
 let g:neoformat_run_all_formatters = 1
