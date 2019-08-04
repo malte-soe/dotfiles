@@ -30,7 +30,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Linting/Autocomplete/Format
 Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
 Plug 'honza/vim-snippets'
-Plug 'sbdchd/neoformat'
+Plug 'Chiel92/vim-autoformat'
 " UI
 Plug 'arcticicestudio/nord-vim'
 Plug 'sheerun/vim-polyglot'
@@ -57,20 +57,7 @@ colorscheme nord
 let g:airline_powerline_fonts = 1
 
 " Format
-let g:neoformat_run_all_formatters = 1
-let g:neoformat_python_black = {
-            \ 'exe': 'black',
-            \ 'stdin': 1,
-            \ 'args': ['--line-length 80', '-q', '-'],
-            \ }
-let g:neoformat_enabled_python = ['black', 'isort']
-let g:neoformat_basic_format_align = 1
-let g:neoformat_basic_format_retab = 1
-let g:neoformat_basic_format_trim = 1
-augroup format
-    autocmd!
-    autocmd BufWritePre * undojoin | Neoformat
-augroup END
+au BufWrite * :Autoformat
 
 " LanguageServer
 nmap <silent> gd <Plug>(coc-definition)
