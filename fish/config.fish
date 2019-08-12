@@ -12,8 +12,4 @@ end
 
 set -x IPYTHONDIR ~/.config/ipython
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-eval /Users/malte/miniconda3/bin/conda "shell.fish" "hook" $argv | source
-# <<< conda initialize <<<
 set -x CONDA_LEFT_PROMPT
