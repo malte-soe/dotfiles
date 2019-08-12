@@ -53,10 +53,13 @@ Plug 'tpope/vim-commentary' " Commenting
 call plug#end()
 
 " Colorscheme
-colorscheme nord
 let g:airline_powerline_fonts = 1
+let g:nord_italic_comments = 1
+let g:nord_underline = 1
+colorscheme nord
 
 " Format
+let g:autoformat_autoindent = 0
 au BufWrite * :Autoformat
 
 " LanguageServer
