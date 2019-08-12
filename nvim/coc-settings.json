@@ -1,5 +1,17 @@
 {
     "coc.preferences.jumpCommand": "tabe",
     "python.jediEnabled": true,
-    "python.linting.pylintUseMinimalCheckers": false 
+    "python.linting.pylintUseMinimalCheckers": false,
+    "languageserver": {
+        "ccls": {
+          "command": "ccls",
+          "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+          "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+          "initializationOptions": {
+             "cache": {
+               "directory": ".ccls-cache"
+             }
+           }
+        }
+    }
 }
