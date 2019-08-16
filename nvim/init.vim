@@ -28,9 +28,8 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 call plug#begin('~/.local/share/nvim/plugged')
 " Linting/Autocomplete/Format
-Plug 'neoclide/coc.nvim', {'do': './install.sh nightly'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
-Plug 'Chiel92/vim-autoformat'
 " UI
 Plug 'arcticicestudio/nord-vim'
 Plug 'sheerun/vim-polyglot'
@@ -57,10 +56,6 @@ let g:airline_powerline_fonts = 1
 let g:nord_italic_comments = 1
 let g:nord_underline = 1
 colorscheme nord
-
-" Format
-let g:autoformat_autoindent = 0
-au BufWrite * :Autoformat
 
 " LanguageServer
 nmap <silent> gd <Plug>(coc-definition)
