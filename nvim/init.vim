@@ -1,5 +1,6 @@
 let g:loaded_python_provider = 1
 let g:netrw_dirhistmax = 0
+set incsearch
 set tabstop=4
 set shiftwidth=0
 set expandtab
