@@ -1,15 +1,7 @@
-if not functions -q fundle
-    eval (curl -sfL https://git.io/fundle-install)
+if not functions -q omf
+    eval (curl -L https://get.oh-my.fish | fish)
 end
 
-fundle plugin 'edc/bass'
-fundle plugin 'franciscolourenco/done'
-fundle plugin 'fishpkg/fish-humanize-duration'
-fundle init
-if test -e ~/.bash_profile
-    bass source ~/.bash_profile
-end
+bass source ~/.nix-profile/etc/profile.d/nix.sh
 
 set -x IPYTHONDIR ~/.config/ipython
-
-set -x CONDA_LEFT_PROMPT
