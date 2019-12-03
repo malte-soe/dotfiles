@@ -11,7 +11,7 @@ set scrolloff=7
 set autoread
 set shortmess=I
 set scrolljump=10
-"
+
 " hyprid number with auto toggling
 set number relativenumber cursorline
 augroup numbertoggle
@@ -35,9 +35,9 @@ Plug 'honza/vim-snippets'
 Plug 'arcticicestudio/nord-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-airline/vim-airline'
+Plug 'psliwka/vim-smoothie'
 " Navigation
-Plug 'junegunn/fzf', { 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
+Plug 'liuchengxu/vim-clap'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
 " GIT
@@ -87,7 +87,7 @@ let g:snips_email = 'chacki@users.noreply.github.com'
 let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 
 " Fuzzy file finder
-nnoremap <c-p> :FZF<cr>
+nnoremap <c-p> :Clap<cr>
 
 " Neomake
 map <F9> :Neomake!<CR>

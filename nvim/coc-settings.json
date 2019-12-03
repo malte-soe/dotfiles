@@ -2,7 +2,7 @@
     "coc.preferences.jumpCommand": "tab drop",
     "coc.preferences.formatOnSaveFiletypes": ["python"],
 
-    "python.jediEnabled": false,
+    "python.jediEnabled": true,
     "python.linting.pylintUseMinimalCheckers": false,
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": ["-l 80"],
