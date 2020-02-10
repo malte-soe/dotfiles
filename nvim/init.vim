@@ -40,6 +40,7 @@ Plug 'psliwka/vim-smoothie'
 Plug 'liuchengxu/vim-clap'
 Plug 'majutsushi/tagbar'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'tpope/vim-projectionist'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -53,6 +54,9 @@ Plug 'tpope/vim-commentary' " Commenting
 call plug#end()
 
 " Colorscheme
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_powerline_fonts = 1
 let g:nord_italic_comments = 1
 let g:nord_underline = 1

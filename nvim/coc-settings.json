@@ -4,20 +4,31 @@
 
     "python.jediEnabled": true,
     "python.linting.pylintUseMinimalCheckers": false,
+    "python.linting.pylintArgs": ["--disable=C0330"],
+    "python.linting.mypyEnabled": true,
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": ["-l 80"],
 
     "languageserver": {
         "ccls": {
-          "command": "ccls",
-          "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
-          "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-          "initializationOptions": {
-             "cache": {
-               "directory": ".ccls-cache"
-             }
-           }
+            "command": "ccls",
+            "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+            "initializationOptions": {
+                "cache": {
+                    "directory": ".ccls-cache"
+                }
+            }
+        },
+        "elmLS": {
+            "command": "elm-language-server",
+            "filetypes": ["elm"],
+            "rootPatterns": ["elm.json"],
+            "initializationOptions": {
+                "elmAnalyseTrigger": "change"
+            }
         }
     },
+    "codeLens.enable": true,
     "coc.preferences.extensionUpdateCheck": "daily"
 }
