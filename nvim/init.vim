@@ -1,16 +1,19 @@
 let g:loaded_python_provider = 1
 let g:netrw_dirhistmax = 0
-set incsearch
-set tabstop=4
-set shiftwidth=0
-set expandtab
-set lazyredraw
-set showmatch
-set cc=80,100,120
-set scrolloff=7
+let mapleader = " "
 set autoread
-set shortmess=I
+set cc=80,100,120
+set expandtab
+set incsearch
+set lazyredraw
 set scrolljump=10
+set scrolloff=7
+set shiftwidth=0
+set shortmess+=Ic
+set showmatch
+set signcolumn=yes
+set tabstop=4
+set updatetime=300
 
 " hyprid number with auto toggling
 set number relativenumber cursorline
@@ -67,6 +70,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <leader>rn <Plug>(coc-rename)
 
 " Snippets
 inoremap <silent><expr> <TAB>
