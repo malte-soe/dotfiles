@@ -2,7 +2,7 @@ let g:loaded_python_provider = 1
 let g:netrw_dirhistmax = 0
 let mapleader = " "
 set autoread
-set cc=80,100,120
+set cc=80,88,100
 set expandtab
 set incsearch
 set lazyredraw
@@ -35,21 +35,15 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 " UI
-Plug 'arcticicestudio/nord-vim'
+Plug 'jeffkreeftmeijer/vim-dim'
 Plug 'sheerun/vim-polyglot'
-Plug 'vim-airline/vim-airline'
-Plug 'psliwka/vim-smoothie'
 " Navigation
-Plug 'liuchengxu/vim-clap'
-Plug 'majutsushi/tagbar'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-projectionist'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-" Tools
-Plug 'neomake/neomake'
-Plug 'rhysd/vim-grammarous'
 " Keybindings
 Plug 'tpope/vim-vinegar'    " Filemanager
 Plug 'tpope/vim-unimpaired' " Bracket navigation
@@ -57,54 +51,84 @@ Plug 'tpope/vim-commentary' " Commenting
 call plug#end()
 
 " Colorscheme
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline_powerline_fonts = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 1
-colorscheme nord
-
-" LanguageServer
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
-
-" Snippets
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? coc#_select_confirm() :
-            \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<tab>'
+colorscheme dim
+highlight clear SignColumn
+highlight clear ColorColumn
 
 " Docstring
 let g:snips_author = 'Malte Sönnichsen'
-let g:snips_github = 'https://github.com/Chacki'
+let g:snips_github = 'https://github.com/malte-soe'
 let g:snips_email = 'chacki@users.noreply.github.com'
-
-" LanguageTool
-let g:grammarous#languagetool_cmd = 'languagetool-commandline'
 
 " Fuzzy file finder
 nnoremap <c-p> :Clap<cr>
 
-" Neomake
-map <F9> :Neomake!<CR>
-let g:neomake_make_maker = {
-            \ 'exe': 'make',
-            \ }
-let g:neomake_markdown_enabled_makers = ['make']
 
-" Tagbar
-nmap <F8> :TagbarToggle<CR>
+
+" COC
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Docs
+nnoremap <silent> D :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Refactoring
+nmap <leader>rn <Plug>(coc-rename)
+" Remap for do codeAction of selected region
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
+xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+
+" Use <TAB> for selections ranges.
+" NOTE: Requires 'textDocument/selectionRange' support from the language server.
+" coc-tsserver, coc-python are the examples of servers that support it.
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+
+" Statusline
+hi StatuslineColor ctermbg=None ctermfg=blue
+set statusline=
+set statusline+=%#StatuslineColor#
+set statusline+=%f
+set statusline+=%=
+set statusline+=%{coc#status()}
+set statusline+=%y              " file type
+set statusline+=%10((%l,%c)%)\            " line and column
+set statusline+=%P                        " percentage of file
+
+
 
 autocmd! bufwritepost init.vim source %
