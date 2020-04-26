@@ -19,8 +19,8 @@ set updatetime=300
 set number relativenumber cursorline
 augroup numbertoggle
     autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave * set relativenumber cursorline
-    autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline
+    autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set relativenumber cursorline
+    autocmd BufLeave,WinLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline
 augroup END
 
 " Plugins
@@ -52,8 +52,16 @@ call plug#end()
 
 " Colorscheme
 colorscheme dim
-highlight clear SignColumn
+highlight SignColumn ctermbg=none
 highlight clear ColorColumn
+highlight VertSplit ctermbg=none ctermfg=none
+set fillchars+=vert:\ 
+hi ActiveWindow ctermbg=black ctermfg=None
+hi InactiveWindow ctermbg=None ctermfg=None
+set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+highlight StatusLineNC ctermbg=none
+highlight StatusLine ctermbg=none
+
 
 " Docstring
 let g:snips_author = 'Malte Sönnichsen'
@@ -119,14 +127,12 @@ nmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <TAB> <Plug>(coc-range-select)
 
 " Statusline
-hi StatuslineColor ctermbg=None ctermfg=blue
 set statusline=
-set statusline+=%#StatuslineColor#
 set statusline+=%f
 set statusline+=%=
 set statusline+=%{coc#status()}
 set statusline+=%y              " file type
-set statusline+=%10((%l,%c)%)\            " line and column
+set statusline+=%10(\ %l,%c\ %)\            " line and column
 set statusline+=%P                        " percentage of file
 
 
