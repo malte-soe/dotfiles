@@ -2,12 +2,13 @@
     "coc.preferences.jumpCommand": "tab drop",
     "coc.preferences.formatOnSaveFiletypes": ["python"],
 
-    "python.jediEnabled": true,
+    "python.jediEnabled": false,
+    "python.linting.pydocstyleEnabled": true,
+    "python.linting.pylintEnabled": true,
     "python.linting.pylintUseMinimalCheckers": false,
     "python.linting.pylintArgs": ["--disable=C0330"],
     "python.linting.mypyEnabled": true,
     "python.formatting.provider": "black",
-    "python.formatting.blackArgs": ["-l 80"],
 
     "languageserver": {
         "ccls": {

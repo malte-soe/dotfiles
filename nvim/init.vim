@@ -34,9 +34,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Linting/Autocomplete/Format
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
-" UI
-Plug 'jeffkreeftmeijer/vim-dim'
-Plug 'sheerun/vim-polyglot'
 " Navigation
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 Plug 'christoomey/vim-tmux-navigator'
@@ -48,6 +45,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-vinegar'    " Filemanager
 Plug 'tpope/vim-unimpaired' " Bracket navigation
 Plug 'tpope/vim-commentary' " Commenting
+" UI
+Plug 'jeffkreeftmeijer/vim-dim'
+Plug 'TaDaa/vimade'
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 " Colorscheme
@@ -56,11 +57,9 @@ highlight SignColumn ctermbg=none
 highlight clear ColorColumn
 highlight VertSplit ctermbg=none ctermfg=none
 set fillchars+=vert:\ 
-hi ActiveWindow ctermbg=black ctermfg=None
-hi InactiveWindow ctermbg=None ctermfg=None
-set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
-highlight StatusLineNC ctermbg=none
-highlight StatusLine ctermbg=none
+highlight StatusLineNC ctermbg=none ctermfg=grey
+highlight StatusLine ctermbg=none ctermfg=blue
+let g:python_highlight_all = 1
 
 
 " Docstring
@@ -129,11 +128,12 @@ xmap <silent> <TAB> <Plug>(coc-range-select)
 " Statusline
 set statusline=
 set statusline+=%f
+set statusline+=%m
 set statusline+=%=
 set statusline+=%{coc#status()}
-set statusline+=%y              " file type
-set statusline+=%10(\ %l,%c\ %)\            " line and column
-set statusline+=%P                        " percentage of file
+set statusline+=%y
+set statusline+=%4(%c\ %\)
+set statusline+=%P
 
 
 
