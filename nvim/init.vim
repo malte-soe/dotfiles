@@ -125,6 +125,9 @@ nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<C
 nmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <TAB> <Plug>(coc-range-select)
 
+" Use escape to leave terminal insert mode
+tnoremap <Esc> <C-\><C-n>
+
 " Statusline
 set statusline=
 set statusline+=%f
