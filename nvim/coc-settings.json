@@ -1,6 +1,6 @@
 {
     "coc.preferences.jumpCommand": "tab drop",
-    "coc.preferences.formatOnSaveFiletypes": ["python"],
+    "coc.preferences.formatOnSaveFiletypes": ["python", "elm"],
 
     "python.jediEnabled": false,
     "python.linting.pydocstyleEnabled": true,

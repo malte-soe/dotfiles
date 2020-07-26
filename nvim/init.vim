@@ -1,19 +1,20 @@
 let g:loaded_python_provider = 1
 let g:netrw_dirhistmax = 0
 let mapleader = " "
-set autoread
 set cc=80,88,100
 set expandtab
-set incsearch
-set lazyredraw
 set scrolljump=10
 set scrolloff=7
 set shiftwidth=0
 set shortmess+=Ic
+set incsearch
+set smartcase
 set showmatch
 set signcolumn=yes
 set tabstop=4
 set updatetime=300
+set wrap linebreak
+
 
 " hyprid number with auto toggling
 set number relativenumber cursorline
@@ -38,6 +39,7 @@ Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-projectionist'
+Plug 'vimwiki/vimwiki'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -49,6 +51,8 @@ Plug 'tpope/vim-commentary' " Commenting
 Plug 'jeffkreeftmeijer/vim-dim'
 Plug 'TaDaa/vimade'
 Plug 'sheerun/vim-polyglot'
+" Various languages
+Plug 'liuchengxu/graphviz.vim'
 call plug#end()
 
 " Colorscheme
@@ -70,6 +74,17 @@ let g:snips_email = 'chacki@users.noreply.github.com'
 " Fuzzy file finder
 nnoremap <c-p> :Clap<cr>
 
+
+" Zettelkasten
+let g:zettelkasten = '~/Zettelkasten/'
+let g:vimwiki_list =[{
+            \ 'path': zettelkasten,
+            \ 'syntax': 'markdown',
+            \ 'ext': '.md'
+            \ }]
+let g:vimwiki_global_ext = 0
+command! -nargs=1 NewZettel :execute ":e" zettelkasten . strftime("%Y%m%d%H%M") . "-<args>.md"
+nnoremap <leader>nz :NewZettel 
 
 
 " COC
@@ -129,12 +144,13 @@ xmap <silent> <TAB> <Plug>(coc-range-select)
 set statusline=
 set statusline+=%f
 set statusline+=%m
+set statusline+=\ %y
 set statusline+=%=
-set statusline+=%{coc#status()}
-set statusline+=%y
-set statusline+=%4(%c\ %\)
-set statusline+=%P
+" set statusline+=%{coc#status()}
+set statusline+=%c
+set statusline+=\ %P
 
 
 
 autocmd! bufwritepost init.vim source %
+set completeopt=menu,menuone,noinsert
