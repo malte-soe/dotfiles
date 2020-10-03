@@ -33,9 +33,11 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin()
+Plug 'nvim-lua/plenary.nvim'
 " Linting/Autocomplete/Format
 Plug 'neovim/nvim-lsp'
 Plug 'nvim-lua/completion-nvim'
+Plug 'aca/completion-tabnine', { 'do': './install.sh' }
 Plug 'nvim-lua/diagnostic-nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
@@ -43,6 +45,7 @@ Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-projectionist'
 Plug 'vimwiki/vimwiki'
+Plug 'nvim-lua/telescope.nvim'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -53,8 +56,7 @@ Plug 'tpope/vim-commentary' " Commenting
 " UI
 Plug 'jeffkreeftmeijer/vim-dim'
 Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-lua/telescope.nvim'
+Plug 'junegunn/goyo.vim', { 'for': ['markdown', 'tex'] }
 call plug#end()
 
 " Load configs written in lua
@@ -75,6 +77,14 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Set completeopt to have a better completion experience
 set completeopt=menuone,noinsert,noselect
 
+let g:completion_chain_complete_list = {
+    \ 'default': [
+    \    {'complete_items': ['lsp', 'snippet', 'tabnine' ]},
+    \    {'mode': '<c-p>'},
+    \    {'mode': '<c-n>'}
+    \]
+\}
+
 
 " Commands and shortcuts
 command Declaration :lua vim.lsp.buf.declaration()
@@ -83,21 +93,25 @@ command Hover :lua vim.lsp.buf.hover()
 command Implementation :lua vim.lsp.buf.implementation()
 command SignatureHelp :lua vim.lsp.buf.signature_help()
 command TypeDefinition :lua vim.lsp.buf.type_definition()
-command References :lua vim.lsp.buf.references()
+command References :lua require'telescope.builtin'.lsp_references{}
 command DocumentSymbol :lua vim.lsp.buf.document_symbol()
 command WorkspaceSymbol :lua vim.lsp.buf.workspace_symbol()
 command Format :lua vim.lsp.buf.formatting_sync(nil, 1000)
+command Rename :lua vim.lsp.buf.rename()
 
 nnoremap <silent>K  <cmd>Hover<CR>
 nnoremap <silent>gd <cmd>Definition<CR>
 nnoremap <silent>gy <cmd>TypeDefinition<CR>
 nnoremap <silent>gi <cmd>Implementation<CR>
-nnoremap <silent>gr <cmd>lua require'telescope.builtin'.lsp_references{}<CR>
+nnoremap <silent>gr <cmd>References<CR>
 nnoremap <silent>[d <cmd>PrevDiagnosticCycle<CR>
 nnoremap <silent>]d <cmd>NextDiagnosticCycle<CR>
 
 nnoremap <leader>f <cmd>Format<CR>
+nnoremap <leader>r <cmd>Rename<CR>
 nnoremap <leader>p <cmd>lua require'telescope.builtin'.git_files{}<CR>
+nnoremap <leader>ws <cmd>lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
+nnoremap <leader>ds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
 nnoremap <leader>w <cmd>update<CR>
 nnoremap <leader>q <cmd>quit<CR>
 
