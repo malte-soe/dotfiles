@@ -2,7 +2,6 @@ let g:netrw_dirhistmax = 0
 let mapleader = " "
 set cc=80,88,100
 set expandtab
-set scrolljump=10
 set scrolloff=7
 set shiftwidth=0
 set shortmess+=Ic
@@ -10,10 +9,11 @@ set incsearch
 set inccommand=split
 set smartcase
 set showmatch
-set signcolumn=yes
+set signcolumn=number
 set tabstop=4
 set updatetime=300
 set wrap linebreak
+set equalalways
 
 
 " hyprid number with auto toggling
@@ -21,7 +21,7 @@ set number relativenumber cursorline
 augroup numbertoggle
     autocmd!
     autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set relativenumber cursorline
-    autocmd BufLeave,WinLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline
+    autocmd BufLeave,WinLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline number
 augroup END
 
 
@@ -34,6 +34,7 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
+Plug 'direnv/direnv.vim'
 " Linting/Autocomplete/Format
 Plug 'neovim/nvim-lsp'
 Plug 'nvim-lua/completion-nvim'
@@ -44,20 +45,38 @@ Plug 'nvim-treesitter/nvim-treesitter'
 " Navigation
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-projectionist'
-Plug 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki', { 'for': 'markdown' }
 Plug 'nvim-lua/telescope.nvim'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " Keybindings
-Plug 'tpope/vim-vinegar'    " Filemanager
 Plug 'tpope/vim-unimpaired' " Bracket navigation
-Plug 'tpope/vim-commentary' " Commenting
+Plug 'tpope/vim-commentary'
 " UI
-Plug 'jeffkreeftmeijer/vim-dim'
+Plug 'bluz71/vim-moonfly-colors'
 Plug 'nvim-lua/popup.nvim'
 Plug 'junegunn/goyo.vim', { 'for': ['markdown', 'tex'] }
 call plug#end()
+
+
+" Colorscheme
+set termguicolors
+colorscheme moonfly
+highlight clear ColorColumn
+highlight VertSplit guibg=none
+set fillchars+=vert:\ 
+highlight StatusLine guibg=none
+highlight StatusLineNC guibg=none
+highlight ActiveWindow guibg=#000000
+highlight InactiveWindow guibg=none
+set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+
+highlight LspDiagnosticsError guifg=#ff5454
+highlight LspDiagnosticsWarning guifg=#e3c78a
+highlight LspDiagnosticsHint guifg=#80a0ff
+
+
 
 " Load configs written in lua
 lua require("lsp")
@@ -65,7 +84,6 @@ lua require("treesitter")
 
 
 autocmd BufEnter * lua require'completion'.on_attach()
-autocmd BufEnter * lua require'diagnostic'.on_attach()
 let g:diagnostic_enable_virtual_text = 1
 let g:diagnostic_virtual_text_prefix = ' '
 
@@ -107,26 +125,17 @@ nnoremap <silent>gr <cmd>References<CR>
 nnoremap <silent>[d <cmd>PrevDiagnosticCycle<CR>
 nnoremap <silent>]d <cmd>NextDiagnosticCycle<CR>
 
-nnoremap <leader>f <cmd>Format<CR>
-nnoremap <leader>r <cmd>Rename<CR>
-nnoremap <leader>p <cmd>lua require'telescope.builtin'.git_files{}<CR>
+nnoremap <leader>f  <cmd>Format<CR>
+nnoremap <leader>r  <cmd>Rename<CR>
+nnoremap <leader>p  <cmd>lua require'telescope.builtin'.git_files{}<CR>
 nnoremap <leader>ws <cmd>lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
 nnoremap <leader>ds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
-nnoremap <leader>w <cmd>update<CR>
-nnoremap <leader>q <cmd>quit<CR>
+nnoremap <leader>w  <cmd>update<CR>
+nnoremap <leader>q  <cmd>quit<CR>
 
 
-" Colorscheme
-colorscheme dim
-highlight SignColumn ctermbg=none
-highlight clear ColorColumn
-set fillchars+=vert:\ 
-highlight StatusLineNC ctermbg=none ctermfg=grey
-highlight StatusLine ctermbg=none ctermfg=blue
-
-highlight LspDiagnosticsError ctermfg=red
-highlight LspDiagnosticsWarning ctermfg=yellow
-highlight LspDiagnosticsHint ctermfg=blue
+" Terminal navigation
+tnoremap <Esc> <C-\><C-n>
 
 
 " Zettelkasten
@@ -139,25 +148,22 @@ let g:vimwiki_list =[{
 let g:vimwiki_global_ext = 0
 command! -nargs=1 NewZettel :execute ":e" zettelkasten . strftime("%Y%m%d%H%M") . "-<args>.md"
 nnoremap <leader>nz :NewZettel 
+nnoremap <leader>sz <cmd>lua require'telescope.builtin'.find_files{ cwd = vim.api.nvim_get_var("zettelkasten") }<CR>
 
 
 " Statusline
 function! LspStatus() abort
-  if luaeval('#vim.lsp.buf_get_clients() > 0')
     return luaeval("require('lsp-status').status()")
-  endif
-
-  return ''
 endfunction
 
 set statusline=
 set statusline+=%{pathshorten(expand('%:~:.'))}     " path
 set statusline+=%-4(\ %m%)
-set statusline+=\ %y\                                " filetype
+set statusline+=\ %y\                               " filetype
 set statusline+=%{LspStatus()}                      " language server status
 set statusline+=%=
-set statusline+=%-4c                               " column
-set statusline+=%-4P                               " position
+set statusline+=%-4c                                " column
+set statusline+=%-4P                                " position
 
 
 autocmd! bufwritepost init.vim source %
