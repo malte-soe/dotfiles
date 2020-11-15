@@ -41,7 +41,7 @@ colors:
     white:   '#e2637f'
 
 font:
-    size: 16
+    size: 15
     normal:
          family: FiraCode Nerd Font
 

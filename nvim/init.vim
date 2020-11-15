@@ -36,10 +36,9 @@ call plug#begin()
 Plug 'nvim-lua/plenary.nvim'
 Plug 'direnv/direnv.vim'
 " Linting/Autocomplete/Format
-Plug 'neovim/nvim-lsp'
+Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'aca/completion-tabnine', { 'do': './install.sh' }
-Plug 'nvim-lua/diagnostic-nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 " Navigation
@@ -69,12 +68,7 @@ set fillchars+=vert:\
 highlight StatusLine guibg=none
 highlight StatusLineNC guibg=none
 highlight ActiveWindow guibg=#000000
-highlight InactiveWindow guibg=none
 set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
-
-highlight LspDiagnosticsError guifg=#ff5454
-highlight LspDiagnosticsWarning guifg=#e3c78a
-highlight LspDiagnosticsHint guifg=#80a0ff
 
 
 
@@ -84,8 +78,6 @@ lua require("treesitter")
 
 
 autocmd BufEnter * lua require'completion'.on_attach()
-let g:diagnostic_enable_virtual_text = 1
-let g:diagnostic_virtual_text_prefix = ' '
 
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
