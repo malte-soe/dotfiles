@@ -1,4 +1,10 @@
-if test -f ~/.nix-profile/etc/profile.d/nix.sh 
+set fish_greeting
+
+
+
+set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+
+if test -f ~/.nix-profile/etc/profile.d/nix.sh
 and functions -q bass
     bass source ~/.nix-profile/etc/profile.d/nix.sh
 end
@@ -14,12 +20,6 @@ end
 
 if command --search direnv > /dev/null
     eval (direnv hook fish)
-end
-
-if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
 end
 
 if test -f ~/miniconda3/bin/conda

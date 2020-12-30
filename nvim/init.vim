@@ -1,7 +1,6 @@
 let g:netrw_dirhistmax = 0
 let mapleader = " "
 set cc=80,88,100
-set expandtab
 set scrolloff=7
 set shiftwidth=0
 set shortmess+=Ic
@@ -10,10 +9,12 @@ set inccommand=split
 set smartcase
 set showmatch
 set signcolumn=number
-set tabstop=4
 set updatetime=300
 set wrap linebreak
-set equalalways
+set tabstop=4
+set splitright
+
+au BufRead,BufNewFile *.nix set filetype=nix
 
 
 " hyprid number with auto toggling
@@ -38,14 +39,15 @@ Plug 'direnv/direnv.vim'
 " Linting/Autocomplete/Format
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'aca/completion-tabnine', { 'do': './install.sh' }
+Plug 'aca/completion-tabnine', { 'do': 'version=3.1.9 ./install.sh' }
 Plug 'nvim-lua/lsp-status.nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-refactor'
 " Navigation
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-projectionist'
 Plug 'vimwiki/vimwiki', { 'for': 'markdown' }
-Plug 'nvim-lua/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 " GIT
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -89,11 +91,12 @@ set completeopt=menuone,noinsert,noselect
 
 let g:completion_chain_complete_list = {
     \ 'default': [
-    \    {'complete_items': ['lsp', 'snippet', 'tabnine' ]},
+    \    {'complete_items': ['lsp', 'snippet', 'tabnine']},
     \    {'mode': '<c-p>'},
     \    {'mode': '<c-n>'}
     \]
 \}
+let g:completion_sorting = "none"
 
 
 " Commands and shortcuts
@@ -114,8 +117,8 @@ nnoremap <silent>gd <cmd>Definition<CR>
 nnoremap <silent>gy <cmd>TypeDefinition<CR>
 nnoremap <silent>gi <cmd>Implementation<CR>
 nnoremap <silent>gr <cmd>References<CR>
-nnoremap <silent>[d <cmd>PrevDiagnosticCycle<CR>
-nnoremap <silent>]d <cmd>NextDiagnosticCycle<CR>
+nnoremap <silent>]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent>[d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 
 nnoremap <leader>f  <cmd>Format<CR>
 nnoremap <leader>r  <cmd>Rename<CR>

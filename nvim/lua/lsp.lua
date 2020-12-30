@@ -6,22 +6,19 @@ lsp_status.config({
 })
 
 lspconfig.pyls.setup{
-    on_attach = lsp_status.on_attach,
-    capabilities = lsp_status.capabilities,
+    -- on_attach = lsp_status.on_attach,
+    -- capabilities = lsp_status.capabilities,
     settings={
         pyls = {
             plugins= {
                 pycodestyle = {
                     maxLineLength = 88;
                 },
-                pyls_mypy = {
-                    enabled = true,
-                    live_mode = true,
-                }
             }
         }
     }
 }
+lspconfig.pyright.setup{}
 
 lspconfig.sumneko_lua.setup{
     on_attach = lsp_status.on_attach,
@@ -33,3 +30,5 @@ lspconfig.rls.setup{}
 lspconfig.texlab.setup{}
 
 lspconfig.rnix.setup{}
+
+lspconfig.ccls.setup{}
