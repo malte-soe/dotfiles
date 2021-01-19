@@ -31,4 +31,4 @@ lspconfig.texlab.setup{}
 
 lspconfig.rnix.setup{}
 
-lspconfig.ccls.setup{}
+lspconfig.clangd.setup{cmd = { "clangd", "--background-index" , "--query-driver", (vim.env.NIX_CC or "/usr") .. "/bin/clang++"}}
