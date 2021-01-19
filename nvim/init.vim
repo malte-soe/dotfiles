@@ -2,7 +2,6 @@ let g:netrw_dirhistmax = 0
 let mapleader = " "
 set cc=80,88,100
 set scrolloff=7
-set shiftwidth=0
 set shortmess+=Ic
 set incsearch
 set inccommand=split
@@ -11,8 +10,14 @@ set showmatch
 set signcolumn=number
 set updatetime=300
 set wrap linebreak
-set tabstop=4
 set splitright
+
+set tabstop=4       " number of visual spaces per TAB
+set softtabstop=4   " number of spaces in tab when editing
+set shiftwidth=4    " number of spaces to use for autoindent
+set expandtab       " tabs are space
+set autoindent
+set copyindent      " copy indent from the previous line
 
 au BufRead,BufNewFile *.nix set filetype=nix
 
@@ -71,6 +76,9 @@ highlight StatusLine guibg=none
 highlight StatusLineNC guibg=none
 highlight ActiveWindow guibg=#000000
 set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+highlight LspDiagnosticsVirtualTextError guifg=#ff5454 " red
+highlight LspDiagnosticsVirtualTextWarning guifg=#80a0ff " blue
+highlight LspDiagnosticsVirtualTextInformation guifg=#8cc85f " green
 
 
 
