@@ -125,6 +125,7 @@ nnoremap <leader>r  <cmd>Rename<CR>
 nnoremap <leader>p  <cmd>lua require'telescope.builtin'.git_files{}<CR>
 nnoremap <leader>ws <cmd>lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
 nnoremap <leader>ds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>w  <cmd>update<CR>
 nnoremap <leader>q  <cmd>quit<CR>
 
