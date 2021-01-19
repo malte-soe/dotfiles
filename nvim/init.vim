@@ -38,7 +38,7 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-call plug#begin()
+call plug#begin('~/.local/share/nvim/plugged')
 Plug 'nvim-lua/plenary.nvim'
 Plug 'direnv/direnv.vim'
 " Linting/Autocomplete/Format
@@ -133,6 +133,7 @@ nnoremap <leader>r  <cmd>Rename<CR>
 nnoremap <leader>p  <cmd>lua require'telescope.builtin'.git_files{}<CR>
 nnoremap <leader>ws <cmd>lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
 nnoremap <leader>ds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<CR>
 nnoremap <leader>w  <cmd>update<CR>
 nnoremap <leader>q  <cmd>quit<CR>
 
