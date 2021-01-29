@@ -4,6 +4,7 @@
 !alacritty/*
 !fish/
 !fish/config.fish
+!fish/fish_plugins
 !ipython/
 !ipython/profile_default/
 !ipython/profile_default/ipython_config.py
