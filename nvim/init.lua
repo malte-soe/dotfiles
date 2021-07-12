@@ -4,6 +4,7 @@ local g = vim.g      -- a table to access global variables
 local opt = vim.opt  -- to set options
 g.netrw_dirhistmax = 0
 g.mapleader = " "
+opt.mouse = "a"
 opt.shortmess:append("Ic")
 opt.cc = {80,88,100}
 opt.scrolloff=7
@@ -36,7 +37,7 @@ local install_path = fn.stdpath('data') .. '/site/pack/paqs/start/paq-nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
     cmd('!git clone --depth=1 https://github.com/savq/paq-nvim.git ' .. install_path)
 end
-local paq = require 'paq-nvim'
+local paq = require 'paq'
 paq {
 	'savq/paq-nvim';
 	'nvim-lua/plenary.nvim';
@@ -44,10 +45,11 @@ paq {
     -- Linting/Autocomplete/Format
 	'neovim/nvim-lspconfig';
 	'hrsh7th/nvim-compe';
-	'nvim-lua/lsp-status.nvim';
+	'ray-x/lsp_signature.nvim';
+	'hrsh7th/vim-vsnip';
+	'rafamadriz/friendly-snippets';
     'nvim-treesitter/nvim-treesitter';
 	'nvim-treesitter/nvim-treesitter-refactor';
-	'ray-x/lsp_signature.nvim';
     -- Navigation
 	'christoomey/vim-tmux-navigator';
 	'nvim-telescope/telescope.nvim';
@@ -82,31 +84,58 @@ autocmd ColorScheme * set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWind
 
 -- autocomplete
 local lspconfig = require'lspconfig'
-local lsp_status = require('lsp-status')
-lsp_status.register_progress()
--- lspconfig.pyls.setup{
---     settings={
---         pyls = {
---             plugins= {
---                 pycodestyle = {
---                     maxLineLength = 88;
---                 },
---             }
---         }
---     }
--- }
-lspconfig.pyright.setup{}
-lspconfig.sumneko_lua.setup{}
-lspconfig.rls.setup{}
-lspconfig.texlab.setup{}
-lspconfig.rnix.setup{}
-lspconfig.clangd.setup{
-    cmd = { 
-        "clangd", 
-        "--background-index" , 
-        "--query-driver", (vim.env.NIX_CC or "/usr") .. "/bin/clang++"
-    },
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
 }
+local on_attach = function(client, bufnr)
+    require'lsp_signature'.on_attach()
+end
+local lsps = { 
+    'bashls',
+    'pyright', 
+    'rls', 
+    'rnix', 
+    'sumneko_lua', 
+    'texlab', 
+    {
+        server='clangd', 
+        cfg={
+            cmd = { 
+                "clangd", 
+                "--background-index" , 
+                "--query-driver", (vim.env.NIX_CC or "/usr") .. "/bin/clang++"
+            }
+        }
+    },
+    -- {
+    --     server='pyls',
+    --     cfg={
+    --         settings={
+    --             pyls = {
+    --                 plugins = {
+    --                     pycodestyle = {
+    --                         maxLineLength =88;
+    --                     },
+    --                 },
+    --             },
+    --         },
+    --     },
+    -- },
+}
+for _, lsp in ipairs(lsps) do
+    if type(lsp) == 'string' then
+        lsp = {server=lsp, cfg={}}
+    end
+    lsp.cfg.on_attach = on_attach
+    lsp.cfg.capabilities = capabilities
+    lspconfig[lsp.server].setup(lsp.cfg)
+end
 
 vim.o.completeopt = "menuone,noselect"
 require'compe'.setup {
@@ -115,10 +144,58 @@ require'compe'.setup {
         buffer = true;
         nvim_lsp = true;
         nvim_lua = true;
+        vsnip = true;
     };
 }
 
-require'lsp_signature'.on_attach()
+vim.cmd[[
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+]]
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn['vsnip#available'](1) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+    return t "<Plug>(vsnip-jump-prev)"
+  else
+    -- If <S-Tab> is not working in your terminal, change it to <C-h>
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+
 
 -- treesitter ------------------------------------------------------------------
 require'nvim-treesitter.configs'.setup {
@@ -144,14 +221,15 @@ nnoremap <leader>gd <cmd>lua require'telescope.builtin'.lsp_definitions{}<CR>
 nnoremap <leader>gt <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>fr <cmd>lua require'telescope.builtin'.lsp_references{}<CR>
+nnoremap <leader>fic <cmd>lua vim.lsp.buf.incoming_calls()<CR>
 nnoremap <silent>]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <silent>[d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 
 nnoremap <leader>ca <cmd>lua require'telescope.builtin'.lsp_code_actions{}<CR>
-nnoremap <leader>f  <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>
+nnoremap <leader>f  <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>r  <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep{}<CR>
-nnoremap <leader>fws <cmd>lua require'telescope.builtin'.lsp_workspace_symbols{query=vim.fn.input("Query symbol: ")}<CR>
+nnoremap <leader>fws <cmd>lua require'telescope.builtin'.lsp_dynamic_workspace_symbols{}<CR>
 nnoremap <leader>fds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
 nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
 nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
