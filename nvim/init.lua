@@ -29,6 +29,10 @@ cmd([[
         autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set relativenumber cursorline
         autocmd BufLeave,WinLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline number
     augroup END
+    augroup filetypedetect
+        au! BufRead,BufNewFile *.nix setfiletype nix
+    augroup end
+
 ]])
 
 -- paq.nvim automatic install --------------------------------------------------
