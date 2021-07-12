@@ -31,6 +31,7 @@ cmd([[
     augroup END
     augroup filetypedetect
         au! BufRead,BufNewFile *.nix setfiletype nix
+	au! BufRead,BufNewFile *.fish setfiletype fish
     augroup end
 
 ]])
