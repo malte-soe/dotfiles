@@ -1,5 +1,8 @@
 draw_bold_text_with_bright_colors: true
 
+window:
+  decorations: buttonless
+
 # Colors
 colors:
   # Default colors
@@ -20,7 +23,7 @@ colors:
 
   # Normal colors
   normal:
-    black:   '#373c40'
+    black:   '#323437'
     red:     '#ff5454'
     green:   '#8cc85f'
     yellow:  '#e3c78a'
@@ -35,15 +38,15 @@ colors:
     red:     '#ff5189'
     green:   '#36c692'
     yellow:  '#bfbf97'
-    blue:    '#78c2ff'
+    blue:    '#74b2ff'
     magenta: '#ae81ff'
     cyan:    '#85dc85'
     white:   '#e2637f'
 
 font:
-    size: 13
-    normal:
-         family: FiraCode Nerd Font
+  size: 14
+  normal:
+    family: FiraCode Nerd Font
 
 scrolling:
-    history: 0
+  history: 0
