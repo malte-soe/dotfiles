@@ -1,19 +1,19 @@
-local cmd = vim.cmd  -- to execute Vim commands e.g. cmd('pwd')
-local fn = vim.fn    -- to call Vim functions e.g. fn.bufnr()
-local g = vim.g      -- a table to access global variables
-local opt = vim.opt  -- to set options
+local cmd = vim.cmd -- to execute Vim commands e.g. cmd('pwd')
+local fn = vim.fn -- to call Vim functions e.g. fn.bufnr()
+local g = vim.g -- a table to access global variables
+local opt = vim.opt -- to set options
 g.netrw_dirhistmax = 0
 g.mapleader = " "
 opt.mouse = "a"
 opt.shortmess:append("Ic")
-opt.cc = {80,88,100}
-opt.scrolloff=7
+opt.cc = { 80, 88, 100 }
+opt.scrolloff = 7
 opt.incsearch = true
-opt.inccommand = 'split'
+opt.inccommand = "split"
 opt.smartcase = true
 opt.showmatch = true
-opt.signcolumn = 'number'
-opt.updatetime = 300
+opt.signcolumn = "no"
+opt.updatetime = 250
 opt.splitright = true
 opt.lazyredraw = true
 opt.tabstop = 4
@@ -27,196 +27,215 @@ opt.hidden = true
 cmd([[
     augroup numbertoggle
         autocmd!
-        autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set relativenumber cursorline
+        autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set number relativenumber cursorline
         autocmd BufLeave,WinLeave,FocusLost,InsertEnter   * set norelativenumber nocursorline number
     augroup END
-    augroup filetypedetect
-        au! BufRead,BufNewFile *.nix setfiletype nix
-        au! BufRead,BufNewFile *.fish setfiletype fish
-    augroup end
-
 ]])
+
+-- gui -------------------------------------------------------------------------
+vim.opt.guifont = "FiraCode Nerd Font"
 
 -- paq.nvim automatic install --------------------------------------------------
-local install_path = fn.stdpath('data') .. '/site/pack/paqs/start/paq-nvim'
+local install_path = fn.stdpath("data") .. "/site/pack/paqs/start/paq-nvim"
 if fn.empty(fn.glob(install_path)) > 0 then
-    cmd('!git clone --depth=1 https://github.com/savq/paq-nvim.git ' .. install_path)
+	cmd("!git clone --depth=1 https://github.com/savq/paq-nvim.git " .. install_path)
 end
-local paq = require 'paq'
-paq {
-	'savq/paq-nvim';
-	'nvim-lua/plenary.nvim';
-	'nvim-lua/popup.nvim';
-    -- Linting/Autocomplete/Format
-	'neovim/nvim-lspconfig';
-	'hrsh7th/nvim-compe';
-	'ray-x/lsp_signature.nvim';
-	'hrsh7th/vim-vsnip';
-	'rafamadriz/friendly-snippets';
-    'nvim-treesitter/nvim-treesitter';
-	'nvim-treesitter/nvim-treesitter-refactor';
-    -- Navigation
-	'christoomey/vim-tmux-navigator';
-	'nvim-telescope/telescope.nvim';
-    -- GIT
-	'tpope/vim-fugitive';
-	'airblade/vim-gitgutter';
-    -- Keybindings
-	'tpope/vim-unimpaired';
-	'tpope/vim-commentary';
-    -- UI
-	'bluz71/vim-moonfly-colors';
-	'kyazdani42/nvim-web-devicons';
-	'hoob3rt/lualine.nvim';
-}
-paq.clean()
-paq.install()
+local paq = require("paq")
+paq({
+	"savq/paq-nvim",
+	"nvim-lua/plenary.nvim",
+	"nvim-lua/popup.nvim",
+	-- Linting/Autocomplete/Format
+	"neovim/nvim-lspconfig",
+	"rafamadriz/friendly-snippets",
+	"hrsh7th/vim-vsnip",
+	"hrsh7th/nvim-cmp",
+	"hrsh7th/cmp-buffer",
+	"hrsh7th/cmp-nvim-lua",
+	"hrsh7th/cmp-nvim-lsp",
+	"hrsh7th/cmp-vsnip",
+	"hrsh7th/cmp-path",
+	"ray-x/lsp_signature.nvim",
+	"nvim-treesitter/nvim-treesitter",
+	"nvim-treesitter/nvim-treesitter-refactor",
+	"nvim-treesitter/nvim-treesitter-textobjects",
+	-- Navigation
+	"christoomey/vim-tmux-navigator",
+	"nvim-telescope/telescope.nvim",
+	-- GIT
+	"tpope/vim-fugitive",
+	"lewis6991/gitsigns.nvim",
+	-- Keybindings
+	"tpope/vim-unimpaired",
+	"tpope/vim-commentary",
+	-- UI
+	"projekt0n/github-nvim-theme",
+	"kyazdani42/nvim-web-devicons",
+	"onsails/lspkind-nvim",
+	"hoob3rt/lualine.nvim",
+})
 
--- colorscheme -----------------------------------------------------------------
-cmd([[
-set termguicolors
-colorscheme moonfly
-set fillchars+=vert:\ 
-]])
-cmd([[
-autocmd ColorScheme * highlight clear ColorColumn
-autocmd ColorScheme * highlight VertSplit guibg=none
-autocmd ColorScheme * highlight StatusLine guibg=none
-autocmd ColorScheme * highlight StatusLineNC guibg=none
-autocmd ColorScheme * highlight ActiveWindow guibg=#000000
-autocmd ColorScheme * set winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
-]])
+require("gitsigns").setup({ numhl = true })
 
 -- autocomplete
-local lspconfig = require'lspconfig'
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  }
-}
+local cmp = require("cmp")
+local lspkind = require("lspkind")
+cmp.setup({
+	formatting = {
+		format = function(entry, vim_item)
+			vim_item.kind = lspkind.presets.default[vim_item.kind]
+			return vim_item
+		end,
+	},
+	snippet = {
+		expand = function(args)
+			vim.fn["vsnip#anonymous"](args.body)
+		end,
+	},
+	mapping = {
+		["<C-p>"] = cmp.mapping.select_prev_item(),
+		["<C-n>"] = cmp.mapping.select_next_item(),
+		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-e>"] = cmp.mapping.close(),
+		["<CR>"] = cmp.mapping.confirm({
+			behavior = cmp.ConfirmBehavior.Insert,
+			select = true,
+		}),
+		["<Tab>"] = function(fallback)
+			if vim.fn.pumvisible() == 1 then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-n>", true, true, true), "n")
+			elseif vim.fn["vsnip#available"]() == 1 then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-expand-or-jump)", true, true, true), "")
+			else
+				fallback()
+			end
+		end,
+		["<S-tab>"] = function(fallback)
+			if vim.fn.pumvisible() == 1 then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-p>", true, true, true), "n")
+			elseif vim.fn["vsnip#available"]() == 1 then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "")
+			else
+				fallback()
+			end
+		end,
+	},
+	sources = {
+		{ name = "buffer" },
+		{ name = "nvim_lsp" },
+		{ name = "nvim_lua" },
+		{ name = "path" },
+		{ name = "vsnip" },
+	},
+})
+
+local lsp_signature = require("lsp_signature")
 local on_attach = function(client, bufnr)
-    require'lsp_signature'.on_attach()
+	lsp_signature.on_attach()
 end
-local lsps = { 
-    'bashls',
-    'pyright', 
-    'rls', 
-    'rnix', 
-    'sumneko_lua', 
-    'texlab', 
-    {
-        server='clangd', 
-        cfg={
-            cmd = { 
-                "clangd", 
-                "--background-index" , 
-                "--query-driver", (vim.env.NIX_CC or "/usr") .. "/bin/clang++"
-            }
-        }
-    },
-    -- {
-    --     server='pyls',
-    --     cfg={
-    --         settings={
-    --             pyls = {
-    --                 plugins = {
-    --                     pycodestyle = {
-    --                         maxLineLength =88;
-    --                     },
-    --                 },
-    --             },
-    --         },
-    --     },
-    -- },
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+local lspconfig = require("lspconfig")
+local lsps = {
+	"bashls",
+	"pyright",
+	"rls",
+	"rnix",
+	"sumneko_lua",
+	"texlab",
+	{
+		server = "clangd",
+		cfg = {
+			cmd = {
+				"clangd",
+				"--background-index",
+				"--query-driver",
+				(vim.env.NIX_CC or "/usr") .. "/bin/clang++",
+			},
+		},
+	},
+	-- {
+	--     server='pyls',
+	--     cfg={
+	--         settings={
+	--             pyls = {
+	--                 plugins = {
+	--                     pycodestyle = {
+	--                         maxLineLength =88;
+	--                     },
+	--                 },
+	--             },
+	--         },
+	--     },
+	-- },
 }
 for _, lsp in ipairs(lsps) do
-    if type(lsp) == 'string' then
-        lsp = {server=lsp, cfg={}}
-    end
-    lsp.cfg.on_attach = on_attach
-    lsp.cfg.capabilities = capabilities
-    lspconfig[lsp.server].setup(lsp.cfg)
+	if type(lsp) == "string" then
+		lsp = { server = lsp, cfg = {} }
+	end
+	lsp.cfg.on_attach = on_attach
+	lsp.cfg.capabilities = capabilities
+	lspconfig[lsp.server].setup(lsp.cfg)
 end
-
-vim.o.completeopt = "menuone,noselect"
-require'compe'.setup {
-    source = {
-        path = true;
-        buffer = true;
-        nvim_lsp = true;
-        nvim_lua = true;
-        vsnip = true;
-    };
-}
-
-vim.cmd[[
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-]]
-
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif vim.fn['vsnip#available'](1) == 1 then
-    return t "<Plug>(vsnip-expand-or-jump)"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-    return t "<Plug>(vsnip-jump-prev)"
-  else
-    -- If <S-Tab> is not working in your terminal, change it to <C-h>
-    return t "<S-Tab>"
-  end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
-
 
 -- treesitter ------------------------------------------------------------------
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
-    highlight = {
-        enable = true,
-    },
-    refactor = {
-        highlight_definitions = { 
-            enable = true 
-        },
-    },
-    indent = {
-        enable = true
-    },
-}
+require("nvim-treesitter.configs").setup({
+	ensure_installed = "maintained",
+	highlight = {
+		enable = true,
+	},
+	indent = {
+		enable = true,
+	},
+	refactor = {
+		highlight_definitions = {
+			enable = true,
+		},
+	},
+	textobjects = {
+		select = {
+			enable = true,
+			lookahead = true,
+			keymaps = {
+				["af"] = "@function.outer",
+				["if"] = "@function.inner",
+				["ac"] = "@class.outer",
+				["ic"] = "@class.inner",
+			},
+		},
+		swap = {
+			enable = true,
+			swap_next = {
+				["<leader>a"] = "@parameter.inner",
+			},
+			swap_previous = {
+				["<leader>A"] = "@parameter.inner",
+			},
+		},
+		move = {
+			enable = true,
+			set_jumps = true, -- whether to set jumps in the jumplist
+			goto_next_start = {
+				["]m"] = "@function.outer",
+				["]]"] = "@class.outer",
+			},
+			goto_next_end = {
+				["]M"] = "@function.outer",
+				["]["] = "@class.outer",
+			},
+			goto_previous_start = {
+				["[m"] = "@function.outer",
+				["[["] = "@class.outer",
+			},
+			goto_previous_end = {
+				["[M"] = "@function.outer",
+				["[]"] = "@class.outer",
+			},
+		},
+	},
+})
 
 -- telescope -------------------------------------------------------------------
 -- see https://github.com/neovim/neovim/pull/13823
@@ -246,15 +265,50 @@ nnoremap <leader>cc <cmd>ClangdSwitchSourceHeader<CR>
 ]])
 
 -- statusline ------------------------------------------------------------------
-require'lualine'.setup{
-    options = {theme = 'auto'},
-    sections = {
-        lualine_a = {
-            'mode',
-            {
-                'diagnostics',
-                sources={'nvim_lsp'},
-            },
-        },
-    },
-}
+require("lualine").setup({
+	options = {
+		theme = "github",
+	},
+	sections = {
+		lualine_b = {
+			"branch",
+			"diff",
+		},
+		lualine_c = {
+			{
+				"filename",
+				path = 1,
+			},
+			{
+				"diagnostics",
+				sources = { "nvim_lsp" },
+			},
+		},
+	},
+	inactive_sections = {
+		lualine_a = {
+			{
+				"filename",
+				path = 1,
+			},
+		},
+		lualine_b = {},
+		lualine_c = {},
+		lualine_z = {},
+		lualine_y = {},
+	},
+})
+
+-- -- colorscheme -----------------------------------------------------------------
+require("github-theme").setup({
+	themeStyle = "dark",
+	darkSidebar = false,
+	darkFloat = true,
+	hideInactiveStatusline = false,
+	colors = {
+		bg_statusline = "bg",
+	},
+})
+cmd([[set fillchars+=vert:\]])
+cmd([[highlight clear ColorColumn]])
+cmd([[highlight Normal guibg=]] .. require("github-theme.theme").setup().colors.bg2)

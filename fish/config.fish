@@ -1,7 +1,5 @@
 set fish_greeting
 
-
-
 set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
 
 # no login shell

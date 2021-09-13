@@ -3,46 +3,6 @@ draw_bold_text_with_bright_colors: true
 window:
   decorations: buttonless
 
-# Colors
-colors:
-  # Default colors
-  primary:
-    background:        '#080808'
-    foreground:        '#b2b2b2'
-    bright_foreground: '#eeeeee'
-
-  # Cursor colors
-  cursor:
-    text:   '#080808'
-    cursor: '#9e9e9e'
-
-  # Selection colors
-  selection:
-    text:       '#080808'
-    background: '#b2ceee'
-
-  # Normal colors
-  normal:
-    black:   '#323437'
-    red:     '#ff5454'
-    green:   '#8cc85f'
-    yellow:  '#e3c78a'
-    blue:    '#80a0ff'
-    magenta: '#d183e8'
-    cyan:    '#79dac8'
-    white:   '#a1aab8'
-
-  # Bright colors
-  bright:
-    black:   '#7c8f8f'
-    red:     '#ff5189'
-    green:   '#36c692'
-    yellow:  '#bfbf97'
-    blue:    '#74b2ff'
-    magenta: '#ae81ff'
-    cyan:    '#85dc85'
-    white:   '#e2637f'
-
 font:
   size: 14
   normal:
@@ -50,3 +10,40 @@ font:
 
 scrolling:
   history: 0
+
+key_bindings:
+  - { key: N,              mods: Command,                    action: SpawnNewInstance      }
+
+
+# github Alacritty Colors
+colors:
+  # Default colors
+  primary:
+    background: '0x24292e'
+    foreground: '0xd1d5da'
+
+  # Normal colors
+  normal:
+    black:   '0x24292e'
+    red:     '0xf14c4c'
+    green:   '0x23d18b'
+    yellow:  '0xe2e210'
+    blue:    '0x3b8eea'
+    magenta: '0xbc3fbc'
+    cyan:    '0x29b7da'
+    white:   '0xd1d5da'
+
+  # Bright colors
+  bright:
+    black:   '0x666666'
+    red:     '0xf14c4c'
+    green:   '0x23d18b'
+    yellow:  '0xf5f543'
+    blue:    '0x3b8eea'
+    magenta: '0xd670d6'
+    cyan:    '0x29b7da'
+    white:   '0xd1d5da'
+
+  indexed_colors:
+    - { index: 16, color: '0xd18616' }
+    - { index: 17, color: '0xf14c4c' }
