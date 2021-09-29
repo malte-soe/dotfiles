@@ -301,14 +301,14 @@ require("lualine").setup({
 
 -- -- colorscheme -----------------------------------------------------------------
 require("github-theme").setup({
-	themeStyle = "dark",
-	darkSidebar = false,
-	darkFloat = true,
-	hideInactiveStatusline = false,
+	theme_style = "dark_default",
+	dark_sidebar = false,
+	dark_float = true,
+	hide_inactive_statusline = false,
 	colors = {
-		bg_statusline = "bg",
+		bg_statusline = "bg2",
 	},
 })
-cmd([[set fillchars+=vert:\]])
+cmd([[set fillchars+=vert:\ ]])
 cmd([[highlight clear ColorColumn]])
-cmd([[highlight Normal guibg=]] .. require("github-theme.theme").setup().colors.bg2)
+cmd([[highlight NormalNC guibg=]] .. require("github-theme.theme").setup().colors.bg2)
