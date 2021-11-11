@@ -72,7 +72,9 @@ paq({
 	"projekt0n/github-nvim-theme",
 	"kyazdani42/nvim-web-devicons",
 	"onsails/lspkind-nvim",
-	"hoob3rt/lualine.nvim",
+	"nvim-lualine/lualine.nvim",
+	-- Preview
+    "iamcco/markdown-preview.nvim",
 })
 
 require("gitsigns").setup({ numhl = true })
@@ -80,6 +82,15 @@ require("gitsigns").setup({ numhl = true })
 -- autocomplete
 local cmp = require("cmp")
 local lspkind = require("lspkind")
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
 cmp.setup({
 	formatting = {
 		format = function(entry, vim_item)
@@ -101,26 +112,26 @@ cmp.setup({
 		["<C-e>"] = cmp.mapping.close(),
 		["<CR>"] = cmp.mapping.confirm({
 			behavior = cmp.ConfirmBehavior.Insert,
-			select = true,
 		}),
-		["<Tab>"] = function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-n>", true, true, true), "n")
-			elseif vim.fn["vsnip#available"]() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-expand-or-jump)", true, true, true), "")
-			else
-				fallback()
-			end
-		end,
-		["<S-tab>"] = function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-p>", true, true, true), "n")
-			elseif vim.fn["vsnip#available"]() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "")
-			else
-				fallback()
-			end
-		end,
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+          elseif vim.fn["vsnip#available"]() == 1 then
+            feedkey("<Plug>(vsnip-expand-or-jump)", "")
+          elseif has_words_before() then
+            cmp.complete()
+          else
+            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+          end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function()
+          if cmp.visible() then
+            cmp.select_prev_item()
+          elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+            feedkey("<Plug>(vsnip-jump-prev)", "")
+          end
+        end, { "i", "s" }),
 	},
 	sources = {
 		{ name = "buffer" },
@@ -151,8 +162,8 @@ local lsps = {
 			cmd = {
 				"clangd",
 				"--background-index",
-				"--query-driver",
-				(vim.env.NIX_CC or "/usr") .. "/bin/clang++",
+				"--completion-style=detailed",
+				"--query-driver=" .. (vim.env.NIX_CC or "/usr") .. "/bin/clang++",
 			},
 		},
 	},
@@ -305,9 +316,6 @@ require("github-theme").setup({
 	dark_sidebar = false,
 	dark_float = true,
 	hide_inactive_statusline = false,
-	colors = {
-		bg_statusline = "bg2",
-	},
 })
 cmd([[set fillchars+=vert:\ ]])
 cmd([[highlight clear ColorColumn]])
