@@ -15,3 +15,7 @@
 !omf/*
 !tmux/
 !tmux/*
+!nixpkgs
+!nixpkgs/*
+!direnv
+!direnv/*
