@@ -257,8 +257,8 @@ nnoremap <leader>gt <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>fr <cmd>lua require'telescope.builtin'.lsp_references{}<CR>
 nnoremap <leader>fic <cmd>lua vim.lsp.buf.incoming_calls()<CR>
-nnoremap <silent>]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <silent>[d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent>]d <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent>[d <cmd>lua vim.diagnostic.goto_prev()<CR>
 
 nnoremap <leader>ca <cmd>lua require'telescope.builtin'.lsp_code_actions{}<CR>
 nnoremap <leader>f  <cmd>lua vim.lsp.buf.formatting()<CR>
