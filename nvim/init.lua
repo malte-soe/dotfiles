@@ -74,7 +74,7 @@ paq({
 	"onsails/lspkind-nvim",
 	"nvim-lualine/lualine.nvim",
 	-- Preview
-    "iamcco/markdown-preview.nvim",
+	"iamcco/markdown-preview.nvim",
 })
 
 require("gitsigns").setup({ numhl = true })
@@ -83,12 +83,12 @@ require("gitsigns").setup({ numhl = true })
 local cmp = require("cmp")
 local lspkind = require("lspkind")
 local has_words_before = function()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
 local feedkey = function(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
 cmp.setup({
@@ -113,25 +113,25 @@ cmp.setup({
 		["<CR>"] = cmp.mapping.confirm({
 			behavior = cmp.ConfirmBehavior.Insert,
 		}),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif vim.fn["vsnip#available"]() == 1 then
-            feedkey("<Plug>(vsnip-expand-or-jump)", "")
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-          end
-        end, { "i", "s" }),
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif vim.fn["vsnip#available"]() == 1 then
+				feedkey("<Plug>(vsnip-expand-or-jump)", "")
+			elseif has_words_before() then
+				cmp.complete()
+			else
+				fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+			end
+		end, { "i", "s" }),
 
-        ["<S-Tab>"] = cmp.mapping(function()
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-            feedkey("<Plug>(vsnip-jump-prev)", "")
-          end
-        end, { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(function()
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+				feedkey("<Plug>(vsnip-jump-prev)", "")
+			end
+		end, { "i", "s" }),
 	},
 	sources = {
 		{ name = "buffer" },
@@ -155,7 +155,19 @@ local lsps = {
 	"rls",
 	"rnix",
 	"sumneko_lua",
-	"texlab",
+	{
+		server = "texlab",
+		cfg = {
+			settings = {
+				texlab = {
+					build = {
+						executable = "tectonic",
+						args = { "%f", "--synctex", "--keep-logs", "--keep-intermediates" },
+					},
+				},
+			},
+		},
+	},
 	{
 		server = "clangd",
 		cfg = {
@@ -167,20 +179,6 @@ local lsps = {
 			},
 		},
 	},
-	-- {
-	--     server='pyls',
-	--     cfg={
-	--         settings={
-	--             pyls = {
-	--                 plugins = {
-	--                     pycodestyle = {
-	--                         maxLineLength =88;
-	--                     },
-	--                 },
-	--             },
-	--         },
-	--     },
-	-- },
 }
 for _, lsp in ipairs(lsps) do
 	if type(lsp) == "string" then
@@ -292,7 +290,7 @@ require("lualine").setup({
 			},
 			{
 				"diagnostics",
-				sources = { "nvim_lsp" },
+				sources = { "nvim_diagnostic" },
 			},
 		},
 	},
@@ -310,13 +308,17 @@ require("lualine").setup({
 	},
 })
 
--- -- colorscheme -----------------------------------------------------------------
+-- colorscheme --------------------------------------------------------------------
 require("github-theme").setup({
 	theme_style = "dark_default",
 	dark_sidebar = false,
 	dark_float = true,
 	hide_inactive_statusline = false,
+	overrides = function(c)
+		return {
+			NormalNC = { bg = c.bg2 },
+			ColorColumn = {},
+		}
+	end,
 })
 cmd([[set fillchars+=vert:\ ]])
-cmd([[highlight clear ColorColumn]])
-cmd([[highlight NormalNC guibg=]] .. require("github-theme.theme").setup().colors.bg2)
