@@ -24,6 +24,8 @@ opt.autoindent = true
 opt.copyindent = true
 opt.hidden = true
 
+g.tex_flavor = "latex"
+
 cmd([[
     augroup numbertoggle
         autocmd!
@@ -75,6 +77,9 @@ paq({
 	"nvim-lualine/lualine.nvim",
 	-- Preview
 	"iamcco/markdown-preview.nvim",
+	-- Other stuff
+	"brymer-meneses/grammar-guard.nvim",
+	"williamboman/nvim-lsp-installer",
 })
 
 require("gitsigns").setup({ numhl = true })
@@ -142,6 +147,7 @@ cmp.setup({
 	},
 })
 
+require("grammar-guard").init()
 local lsp_signature = require("lsp_signature")
 local on_attach = function(client, bufnr)
 	lsp_signature.on_attach()
@@ -164,6 +170,10 @@ local lsps = {
 						executable = "tectonic",
 						args = { "%f", "--synctex", "--keep-logs", "--keep-intermediates" },
 					},
+                    forwardSearch = {
+                        executable = "zathura",
+                        args = {"--synctex-forward", "%l:1:%f", "%p"},
+                    },
 				},
 			},
 		},
@@ -176,6 +186,30 @@ local lsps = {
 				"--background-index",
 				"--completion-style=detailed",
 				"--query-driver=" .. (vim.env.NIX_CC or "/usr") .. "/bin/clang++",
+			},
+		},
+	},
+	{
+		server = "grammar_guard",
+		cfg = {
+			cmd = { vim.env.HOME .. "/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
+			settings = {
+				ltex = {
+					enabled = { "latex", "tex", "bib", "markdown" },
+					language = "en-US",
+					diagnosticSeverity = "information",
+					sentenceCacheSize = 2000,
+					additionalRules = {
+						enablePickyRules = true,
+						motherTongue = "de-DE",
+					},
+					latex = {
+					    environments = {
+                            algorithm="ignore",
+                        },
+                    },
+					trace = { server = "verbose" },
+				},
 			},
 		},
 	},
