@@ -71,7 +71,7 @@ paq({
 	"tpope/vim-unimpaired",
 	"tpope/vim-commentary",
 	-- UI
-	"projekt0n/github-nvim-theme",
+    "projekt0n/github-nvim-theme",
 	"kyazdani42/nvim-web-devicons",
 	"onsails/lspkind-nvim",
 	"nvim-lualine/lualine.nvim",
@@ -307,10 +307,24 @@ nnoremap <leader>q  <cmd>quit<CR>
 nnoremap <leader>cc <cmd>ClangdSwitchSourceHeader<CR>
 ]])
 
+-- colorscheme --------------------------------------------------------------------
+require("github-theme").setup({
+	theme_style = "dark_default",
+	dark_sidebar = false,
+	dark_float = true,
+	overrides = function(c)
+		return {
+			NormalNC = { bg = c.bg2 },
+			ColorColumn = {},
+		}
+	end,
+})
+cmd([[set fillchars+=vert:\ ]])
+
 -- statusline ------------------------------------------------------------------
 require("lualine").setup({
 	options = {
-		theme = "github",
+		theme = "auto",
 	},
 	sections = {
 		lualine_b = {
@@ -341,18 +355,3 @@ require("lualine").setup({
 		lualine_y = {},
 	},
 })
-
--- colorscheme --------------------------------------------------------------------
-require("github-theme").setup({
-	theme_style = "dark_default",
-	dark_sidebar = false,
-	dark_float = true,
-	hide_inactive_statusline = false,
-	overrides = function(c)
-		return {
-			NormalNC = { bg = c.bg2 },
-			ColorColumn = {},
-		}
-	end,
-})
-cmd([[set fillchars+=vert:\ ]])
