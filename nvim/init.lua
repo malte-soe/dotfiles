@@ -64,6 +64,7 @@ paq({
 	-- Navigation
 	"christoomey/vim-tmux-navigator",
 	"nvim-telescope/telescope.nvim",
+	'nvim-telescope/telescope-file-browser.nvim',
 	-- GIT
 	"tpope/vim-fugitive",
 	"lewis6991/gitsigns.nvim",
@@ -75,11 +76,6 @@ paq({
 	"kyazdani42/nvim-web-devicons",
 	"onsails/lspkind-nvim",
 	"nvim-lualine/lualine.nvim",
-	-- Preview
-	"iamcco/markdown-preview.nvim",
-	-- Other stuff
-	"brymer-meneses/grammar-guard.nvim",
-	"williamboman/nvim-lsp-installer",
 })
 
 require("gitsigns").setup({ numhl = true })
@@ -147,7 +143,7 @@ cmp.setup({
 	},
 })
 
-require("grammar-guard").init()
+-- require("grammar-guard").init()
 local lsp_signature = require("lsp_signature")
 local on_attach = function(client, bufnr)
 	lsp_signature.on_attach()
@@ -189,30 +185,6 @@ local lsps = {
 			},
 		},
 	},
-	{
-		server = "grammar_guard",
-		cfg = {
-			cmd = { vim.env.HOME .. "/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
-			settings = {
-				ltex = {
-					enabled = { "latex", "tex", "bib", "markdown" },
-					language = "en-US",
-					diagnosticSeverity = "information",
-					sentenceCacheSize = 2000,
-					additionalRules = {
-						enablePickyRules = true,
-						motherTongue = "de-DE",
-					},
-					latex = {
-					    environments = {
-                            algorithm="ignore",
-                        },
-                    },
-					trace = { server = "verbose" },
-				},
-			},
-		},
-	},
 }
 for _, lsp in ipairs(lsps) do
 	if type(lsp) == "string" then
@@ -225,7 +197,7 @@ end
 
 -- treesitter ------------------------------------------------------------------
 require("nvim-treesitter.configs").setup({
-	ensure_installed = "maintained",
+	ensure_installed = "all",
 	highlight = {
 		enable = true,
 	},
@@ -281,6 +253,9 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- telescope -------------------------------------------------------------------
+local telescope = require("telescope")
+telescope.load_extension "file_browser"
+vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, { noremap = true })
 -- see https://github.com/neovim/neovim/pull/13823
 cmd([[
 nnoremap <leader>i  <cmd>lua vim.lsp.buf.hover()<CR>
@@ -299,7 +274,7 @@ nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep{}<CR>
 nnoremap <leader>fws <cmd>lua require'telescope.builtin'.lsp_dynamic_workspace_symbols{}<CR>
 nnoremap <leader>fds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
 nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
-nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
+nnoremap <leader>b <cmd>lua require'telescope.builtin'.buffers()<CR>
 nnoremap <leader>fl <cmd>lua require'telescope.builtin'.grep_string{search=vim.fn.expand("%:t"), use_regex=false}<CR>
 nnoremap <leader>w  <cmd>update<CR>
 nnoremap <leader>q  <cmd>quit<CR>
