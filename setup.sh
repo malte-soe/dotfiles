@@ -9,7 +9,9 @@ source ~/.bashrc
 
 mamba install fish
 mamba install starship
+mamba install direnv
 curl -L -O "https://github.com/neovim/neovim/releases/download/stable/nvim.appimage"
 chmod +x nvim.appimage
+fish -c "alias -s v=~/nvim.appimage"
 
 echo "exec fish" >> ~/.bashrc
