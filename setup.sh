@@ -1,3 +1,4 @@
+set -e
 cd "$HOME/.config"
 git init
 git remote add origin https://github.com/malte-soe/dotfiles.git
