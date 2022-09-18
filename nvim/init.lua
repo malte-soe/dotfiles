@@ -43,11 +43,46 @@ vim.opt.guifont = "FiraCode Nerd Font"
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
     packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    vim.cmd [[packadd packer.nvim]]
+    -- vim.cmd [[packadd packer.nvim]]
 end
 
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
+    use { 
+        'rcarriga/nvim-dap-ui', 
+        requires = {
+            'mfussenegger/nvim-dap',
+            'mfussenegger/nvim-dap-python'
+        }, 
+        config = function()
+            require("dapui").setup()    
+            local dap, dapui = require("dap"), require("dapui")
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+              dapui.open()
+            end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+              dapui.close()
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+              dapui.close()
+            end
+            vim.keymap.set('n', '<leader>dc', require('dap').continue)
+            vim.keymap.set('n', '<leader>di', require('dap').step_into)
+            vim.keymap.set('n', '<leader>do', require('dap').step_over)
+            vim.keymap.set('n', '<leader>dl', require('dap').run_last)
+            vim.keymap.set('n', '<leader>db', require('dap').toggle_breakpoint)
+            vim.keymap.set('n', '<leader>dr', require('dap').repl.open)
+            vim.keymap.set('n', '<leader>dtm', require('dap-python').test_method)
+            vim.keymap.set('n', '<leader>dtc', require('dap-python').test_class)
+            vim.keymap.set('v', '<leader>ds', require('dap-python').debug_selection)
+        end,
+    }
+    use {
+        'mfussenegger/nvim-dap-python',
+        config = function()
+            require('dap-python').setup('/Users/malte/miniconda3/envs/ldm/bin/python')
+        end,
+    }
     use 'christoomey/vim-tmux-navigator'
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-commentary'
@@ -186,10 +221,11 @@ require('packer').startup(function(use)
         requires = {
             'nvim-treesitter/nvim-treesitter-refactor',
             'nvim-treesitter/nvim-treesitter-textobjects',
+            'nvim-treesitter/nvim-treesitter-context',
         },
+        run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = "all",
                 highlight = {
                     enable = true,
                 },
@@ -255,9 +291,11 @@ require('packer').startup(function(use)
         },
         config = function()
             local telescope = require("telescope")
+            local builtin = require("telescope.builtin")
             telescope.setup()
             telescope.load_extension "file_browser"
             vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, { noremap = true })
+            vim.keymap.set("n", "<leader>ft", builtin.current_buffer_fuzzy_find, { noremap = true })
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true })
             -- TODO use vim.keymap
             vim.cmd([[
@@ -325,14 +363,15 @@ require('packer').startup(function(use)
                     lualine_y = {},
                 },
             })
-        end
+        end,
+        after = "github-nvim-theme",
     }
 
     use {
         'projekt0n/github-nvim-theme',
         config = function()
             require("github-theme").setup({
-                theme_style = "dark_default",
+                theme_style = "light_default",
                 dark_sidebar = false,
                 dark_float = true,
                 overrides = function(c)
