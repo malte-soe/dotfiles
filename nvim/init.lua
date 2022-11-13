@@ -48,6 +48,21 @@ end
 
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
+    use {
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim'
+        },
+        config = function()
+            null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.isort,
+                    null_ls.builtins.formatting.black,
+                },
+            })
+        end,
+    }
     use { 
         'rcarriga/nvim-dap-ui', 
         requires = {
@@ -80,7 +95,7 @@ require('packer').startup(function(use)
     use {
         'mfussenegger/nvim-dap-python',
         config = function()
-            require('dap-python').setup('/Users/malte/miniconda3/envs/ldm/bin/python')
+            require('dap-python').setup('$HOME/miniconda3/envs/ldm/bin/python')
         end,
     }
     use 'christoomey/vim-tmux-navigator'
@@ -167,7 +182,7 @@ require('packer').startup(function(use)
                 },
             })
             local capabilities = vim.lsp.protocol.make_client_capabilities()
-            capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+            capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
             local lspconfig = require("lspconfig")
             local lsps = {
                 "bashls",
