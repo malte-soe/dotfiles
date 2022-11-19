@@ -49,6 +49,13 @@ end
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use {
+        'github/copilot.vim',
+        config = function()
+            vim.g.copilot_no_tab_map = true
+            vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+        end,
+    }
+    use {
         'jose-elias-alvarez/null-ls.nvim',
         requires = {
             'nvim-lua/plenary.nvim'
@@ -59,6 +66,22 @@ require('packer').startup(function(use)
                 sources = {
                     null_ls.builtins.formatting.isort,
                     null_ls.builtins.formatting.black,
+                },
+            })
+        end,
+    }
+    use {
+        "nvim-neotest/neotest",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-neotest/neotest-python"
+        },
+        config = function()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-python"),
                 },
             })
         end,
@@ -386,7 +409,7 @@ require('packer').startup(function(use)
         'projekt0n/github-nvim-theme',
         config = function()
             require("github-theme").setup({
-                theme_style = "light_default",
+                theme_style = "dark_default",
                 dark_sidebar = false,
                 dark_float = true,
                 overrides = function(c)
