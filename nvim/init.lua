@@ -397,6 +397,8 @@ require('packer').startup(function(use)
                 end,
             })
             vim.cmd([[set fillchars+=vert:\ ]])
+            vim.keymap.set("n", "<leader>cd", ":colorscheme github_dark_default<CR>", { noremap = true })
+            vim.keymap.set("n", "<leader>cl", ":colorscheme github_light_default<CR>", { noremap = true })
         end
     }
 
