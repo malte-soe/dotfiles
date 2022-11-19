@@ -19,3 +19,12 @@ if command --search direnv > /dev/null
     eval (direnv hook fish)
 end
 
+
+function dark
+    sed -i '' 's/colors: \*light/colors: *dark/' ~/.config/alacritty/alacritty.yml; 
+end
+
+function light
+    sed -i '' 's/colors: \*dark/colors: *light/' ~/.config/alacritty/alacritty.yml;
+end
+
