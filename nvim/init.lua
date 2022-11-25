@@ -61,7 +61,7 @@ require('packer').startup(function(use)
             'nvim-lua/plenary.nvim'
         },
         config = function()
-            null_ls = require("null-ls")
+            local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
                     null_ls.builtins.formatting.isort,
@@ -86,14 +86,14 @@ require('packer').startup(function(use)
             })
         end,
     }
-    use { 
-        'rcarriga/nvim-dap-ui', 
+    use {
+        'rcarriga/nvim-dap-ui',
         requires = {
             'mfussenegger/nvim-dap',
             'mfussenegger/nvim-dap-python'
-        }, 
+        },
         config = function()
-            require("dapui").setup()    
+            require("dapui").setup()
             local dap, dapui = require("dap"), require("dapui")
             dap.listeners.after.event_initialized["dapui_config"] = function()
               dapui.open()
@@ -359,6 +359,20 @@ require('packer').startup(function(use)
 
             nnoremap <leader>cc <cmd>ClangdSwitchSourceHeader<CR>
             ]])
+        end,
+    }
+    use {
+        'folke/trouble.nvim',
+        requires = {
+            'kyazdani42/nvim-web-devicons',
+        },
+        config = function ()
+            vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>", {silent = true, noremap = true})
+            vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", {silent = true, noremap = true})
+            vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>", {silent = true, noremap = true})
+            vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>", {silent = true, noremap = true})
+            vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", {silent = true, noremap = true})
+            vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>", {silent = true, noremap = true})
         end,
     }
 
