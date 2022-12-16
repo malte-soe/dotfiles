@@ -335,6 +335,7 @@ require('packer').startup(function(use)
             vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, { noremap = true })
             vim.keymap.set("n", "<leader>ft", builtin.current_buffer_fuzzy_find, { noremap = true })
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true })
+            vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { noremap = true })
             -- TODO use vim.keymap
             vim.cmd([[
             nnoremap <leader>i  <cmd>lua vim.lsp.buf.hover()<CR>
@@ -346,7 +347,6 @@ require('packer').startup(function(use)
             nnoremap <silent>]d <cmd>lua vim.diagnostic.goto_next()<CR>
             nnoremap <silent>[d <cmd>lua vim.diagnostic.goto_prev()<CR>
 
-            nnoremap <leader>f  <cmd>lua vim.lsp.buf.formatting()<CR>
             nnoremap <leader>r  <cmd>lua vim.lsp.buf.rename()<CR>
             nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep{}<CR>
             nnoremap <leader>fws <cmd>lua require'telescope.builtin'.lsp_dynamic_workspace_symbols{}<CR>
