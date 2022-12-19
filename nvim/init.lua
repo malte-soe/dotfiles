@@ -1,32 +1,25 @@
-local cmd = vim.cmd -- to execute Vim commands e.g. cmd('pwd')
-local fn = vim.fn -- to call Vim functions e.g. fn.bufnr()
-local g = vim.g -- a table to access global variables
-local opt = vim.opt -- to set options
-g.netrw_dirhistmax = 0
-g.mapleader = " "
-opt.mouse = "a"
-opt.shortmess:append("Ic")
-opt.cc = { 80, 88, 100 }
-opt.scrolloff = 7
-opt.incsearch = true
-opt.inccommand = "split"
-opt.smartcase = true
-opt.showmatch = true
-opt.signcolumn = "no"
-opt.updatetime = 250
-opt.splitright = true
-opt.lazyredraw = true
-opt.tabstop = 4
-opt.softtabstop = 4
-opt.shiftwidth = 4
-opt.expandtab = true
-opt.autoindent = true
-opt.copyindent = true
-opt.hidden = true
+vim.g.netrw_dirhistmax = 0
+vim.g.mapleader = " "
+vim.o.mouse = "a"
+vim.opt.shortmess:append("Ic")
+vim.opt.cc = { 80, 88, 100 }
+vim.opt.scrolloff = 7
+vim.opt.incsearch = true
+vim.opt.inccommand = "split"
+vim.opt.smartcase = true
+vim.opt.showmatch = true
+vim.opt.signcolumn = "no"
+vim.opt.updatetime = 200
+vim.opt.splitright = true
+vim.opt.lazyredraw = true
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.copyindent = true
+vim.opt.hidden = true
 
-g.tex_flavor = "latex"
+vim.g.tex_flavor = "latex"
 
-cmd([[
+vim.cmd([[
     augroup numbertoggle
         autocmd!
         autocmd BufEnter,WinEnter,FocusGained,InsertLeave * set number relativenumber cursorline
@@ -36,18 +29,21 @@ cmd([[
     nnoremap <leader>q  <cmd>quit<CR>
 ]])
 
--- gui -------------------------------------------------------------------------
-vim.opt.guifont = "FiraCode Nerd Font"
+vim.keymap.set("n", "<leader>w", vim.cmd.update)
+vim.keymap.set("n", "<leader>q", vim.cmd.quit)
 
 -- packer.nvim -----------------------------------------------------------------
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    -- vim.cmd [[packadd packer.nvim]]
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+local packer_bootstrap = false
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    packer_bootstrap = true
+    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+    vim.cmd [[packadd packer.nvim]]
 end
 
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
+    use 'tpope/vim-sleuth'
     use {
         'github/copilot.vim',
         config = function()
@@ -61,7 +57,7 @@ require('packer').startup(function(use)
             'nvim-lua/plenary.nvim'
         },
         config = function()
-            null_ls = require("null-ls")
+            local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
                     null_ls.builtins.formatting.isort,
@@ -86,23 +82,23 @@ require('packer').startup(function(use)
             })
         end,
     }
-    use { 
-        'rcarriga/nvim-dap-ui', 
+    use {
+        'rcarriga/nvim-dap-ui',
         requires = {
             'mfussenegger/nvim-dap',
             'mfussenegger/nvim-dap-python'
-        }, 
+        },
         config = function()
-            require("dapui").setup()    
+            require("dapui").setup()
             local dap, dapui = require("dap"), require("dapui")
             dap.listeners.after.event_initialized["dapui_config"] = function()
-              dapui.open()
+                dapui.open()
             end
             dap.listeners.before.event_terminated["dapui_config"] = function()
-              dapui.close()
+                dapui.close()
             end
             dap.listeners.before.event_exited["dapui_config"] = function()
-              dapui.close()
+                dapui.close()
             end
             vim.keymap.set('n', '<leader>dc', require('dap').continue)
             vim.keymap.set('n', '<leader>di', require('dap').step_into)
@@ -133,8 +129,9 @@ require('packer').startup(function(use)
         'hrsh7th/nvim-cmp',
         requires = {
             'neovim/nvim-lspconfig',
-            'hrsh7th/vim-vsnip',
             'rafamadriz/friendly-snippets',
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-nvim-lsp',
@@ -144,18 +141,52 @@ require('packer').startup(function(use)
             'onsails/lspkind-nvim',
         },
         config = function()
+            local on_attach = function(_, bufnr)
+                local nmap = function(keys, func, desc)
+                    if desc then
+                        desc = 'LSP: ' .. desc
+                    end
+
+                    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+                end
+
+                local builtin = require("telescope.builtin")
+
+                nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+                nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+                nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+                nmap('gr', builtin.lsp_references, '[G]oto [R]eferences')
+                nmap('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+                nmap('<leader>td', vim.lsp.buf.type_definition, 'Type [D]efinition')
+                nmap('<leader>ds', builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
+                nmap('<leader>ws', builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+                nmap("<leader>f", vim.lsp.buf.format, '[F]ormat')
+
+                -- See `:help K` for why this keymap
+                nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+                nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+                -- Lesser used LSP functionality
+                nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+                nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+                nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+                nmap('<leader>wl', function()
+                    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                end, '[W]orkspace [L]ist Folders')
+
+                -- Create a command `:Format` local to the LSP buffer
+                vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+                    vim.lsp.buf.format()
+                end, { desc = 'Format current buffer with LSP' })
+            end
+            require("luasnip.loaders.from_vscode").lazy_load()
             local cmp = require('cmp')
             local lspkind = require("lspkind")
-            local has_words_before = function()
-                local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-                return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-            end
-            local feedkey = function(key, mode)
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-            end
+            local luasnip = require("luasnip")
             cmp.setup({
                 formatting = {
-                    format = function(entry, vim_item)
+                    format = function(_, vim_item)
                         vim_item.kind = lspkind.presets.default[vim_item.kind]
                         return vim_item
                     end,
@@ -165,42 +196,39 @@ require('packer').startup(function(use)
                         vim.fn["vsnip#anonymous"](args.body)
                     end,
                 },
-                mapping = {
-                    ["<C-p>"] = cmp.mapping.select_prev_item(),
-                    ["<C-n>"] = cmp.mapping.select_next_item(),
-                    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<C-e>"] = cmp.mapping.close(),
-                    ["<CR>"] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Insert,
-                    }),
-                    ["<Tab>"] = cmp.mapping(function(fallback)
+                mapping = cmp.mapping.preset.insert {
+                    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                    ['<CR>'] = cmp.mapping.confirm {
+                        behavior = cmp.ConfirmBehavior.Replace,
+                        select = true,
+                    },
+                    ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif vim.fn["vsnip#available"]() == 1 then
-                            feedkey("<Plug>(vsnip-expand-or-jump)", "")
-                        elseif has_words_before() then
-                            cmp.complete()
+                        elseif luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
                         else
-                            fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+                            fallback()
                         end
-                    end, { "i", "s" }),
-
-                    ["<S-Tab>"] = cmp.mapping(function()
+                    end, { 'i', 's' }),
+                    ['<S-Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-                            feedkey("<Plug>(vsnip-jump-prev)", "")
+                        elseif luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
                         end
-                    end, { "i", "s" }),
+                    end, { 'i', 's' }),
                 },
                 sources = {
                     { name = "buffer" },
                     { name = "nvim_lsp" },
                     { name = "nvim_lua" },
                     { name = "path" },
-                    { name = "vsnip" },
+                    { name = "luasnip" },
                     { name = "cmp-nvim-lsp-signature-help" },
                 },
             })
@@ -332,33 +360,13 @@ require('packer').startup(function(use)
             local builtin = require("telescope.builtin")
             telescope.setup()
             telescope.load_extension "file_browser"
-            vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, { noremap = true })
-            vim.keymap.set("n", "<leader>ft", builtin.current_buffer_fuzzy_find, { noremap = true })
-            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true })
-            vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { noremap = true })
-            -- TODO use vim.keymap
-            vim.cmd([[
-            nnoremap <leader>i  <cmd>lua vim.lsp.buf.hover()<CR>
-            nnoremap <leader>gd <cmd>lua require'telescope.builtin'.lsp_definitions{}<CR>
-            nnoremap <leader>gt <cmd>lua vim.lsp.buf.type_definition()<CR>
-            nnoremap <leader>gi <cmd>lua vim.lsp.buf.implementation()<CR>
-            nnoremap <leader>fr <cmd>lua require'telescope.builtin'.lsp_references{}<CR>
-            nnoremap <leader>fic <cmd>lua vim.lsp.buf.incoming_calls()<CR>
-            nnoremap <silent>]d <cmd>lua vim.diagnostic.goto_next()<CR>
-            nnoremap <silent>[d <cmd>lua vim.diagnostic.goto_prev()<CR>
-
-            nnoremap <leader>r  <cmd>lua vim.lsp.buf.rename()<CR>
-            nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep{}<CR>
-            nnoremap <leader>fws <cmd>lua require'telescope.builtin'.lsp_dynamic_workspace_symbols{}<CR>
-            nnoremap <leader>fds <cmd>lua require'telescope.builtin'.lsp_document_symbols{}<CR>
-            nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
-            nnoremap <leader>b <cmd>lua require'telescope.builtin'.buffers()<CR>
-            nnoremap <leader>fl <cmd>lua require'telescope.builtin'.grep_string{search=vim.fn.expand("%:t"), use_regex=false}<CR>
-            nnoremap <leader>w  <cmd>update<CR>
-            nnoremap <leader>q  <cmd>quit<CR>
-
-            nnoremap <leader>cc <cmd>ClangdSwitchSourceHeader<CR>
-            ]])
+            vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser)
+            vim.keymap.set("n", "<leader>ft", builtin.current_buffer_fuzzy_find)
+            vim.keymap.set("n", "<silent>]d", vim.diagnostic.goto_next)
+            vim.keymap.set("n", "<silent>[d", vim.diagnostic.goto_prev)
+            vim.keymap.set("n", "<leader>fg", builtin.live_grep)
+            vim.keymap.set("n", "<leader>ff", builtin.find_files)
+            vim.keymap.set("n", "<leader>b", builtin.buffers)
         end,
     }
 
@@ -429,3 +437,11 @@ require('packer').startup(function(use)
         require('packer').sync()
     end
 end)
+
+-- Automatically source and re-compile packer whenever you save this init.lua
+local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
+vim.api.nvim_create_autocmd('BufWritePost', {
+    command = 'source <afile> | PackerCompile',
+    group = packer_group,
+    pattern = vim.fn.expand '$MYVIMRC',
+})
