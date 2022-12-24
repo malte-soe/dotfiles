@@ -32,28 +32,33 @@ vim.cmd([[
 vim.keymap.set("n", "<leader>w", vim.cmd.update)
 vim.keymap.set("n", "<leader>q", vim.cmd.quit)
 
--- packer.nvim -----------------------------------------------------------------
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-local packer_bootstrap = false
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    packer_bootstrap = true
-    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-    vim.cmd [[packadd packer.nvim]]
+-- lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "--single-branch",
+        "https://github.com/folke/lazy.nvim.git",
+        lazypath,
+    })
 end
+vim.opt.runtimepath:prepend(lazypath)
 
-require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
-    use 'tpope/vim-sleuth'
-    use {
+require("lazy").setup({
+    "tpope/vim-sleuth",
+    {
         'github/copilot.vim',
         config = function()
             vim.g.copilot_no_tab_map = true
             vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
         end,
-    }
-    use {
+    },
+    {
         'jose-elias-alvarez/null-ls.nvim',
-        requires = {
+        lazy = true,
+        dependencies = {
             'nvim-lua/plenary.nvim'
         },
         config = function()
@@ -65,10 +70,13 @@ require('packer').startup(function(use)
                 },
             })
         end,
-    }
-    use {
+    },
+    {
         "nvim-neotest/neotest",
-        requires = {
+        keys = {
+            { '<leader>tn', function() require('neotest').run.run() end },
+        },
+        dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
             "antoinemadec/FixCursorHold.nvim",
@@ -81,10 +89,21 @@ require('packer').startup(function(use)
                 },
             })
         end,
-    }
-    use {
+    },
+    {
         'rcarriga/nvim-dap-ui',
-        requires = {
+        keys = {
+            { '<leader>dc', function() require('dap').continue {} end },
+            { '<leader>di', function() require('dap').step_into {} end },
+            { '<leader>do', function() require('dap').step_over {} end },
+            { '<leader>dl', function() require('dap').run_last {} end },
+            { '<leader>db', function() require('dap').toggle_breakpoint {} end },
+            { '<leader>dr', function() require('dap').repl.open {} end },
+            { '<leader>dtm', function() require('dap-python').test_method {} end },
+            { '<leader>dtc', function() require('dap-python').test_class {} end },
+            { '<leader>ds', function() require('dap-python').debug_selection {} end },
+        },
+        dependencies = {
             'mfussenegger/nvim-dap',
             'mfussenegger/nvim-dap-python'
         },
@@ -100,34 +119,25 @@ require('packer').startup(function(use)
             dap.listeners.before.event_exited["dapui_config"] = function()
                 dapui.close()
             end
-            vim.keymap.set('n', '<leader>dc', require('dap').continue)
-            vim.keymap.set('n', '<leader>di', require('dap').step_into)
-            vim.keymap.set('n', '<leader>do', require('dap').step_over)
-            vim.keymap.set('n', '<leader>dl', require('dap').run_last)
-            vim.keymap.set('n', '<leader>db', require('dap').toggle_breakpoint)
-            vim.keymap.set('n', '<leader>dr', require('dap').repl.open)
-            vim.keymap.set('n', '<leader>dtm', require('dap-python').test_method)
-            vim.keymap.set('n', '<leader>dtc', require('dap-python').test_class)
-            vim.keymap.set('v', '<leader>ds', require('dap-python').debug_selection)
         end,
-    }
-    use {
+    },
+    {
         'mfussenegger/nvim-dap-python',
         config = function()
             require('dap-python').setup('$HOME/miniconda3/envs/ldm/bin/python')
         end,
-    }
-    use 'christoomey/vim-tmux-navigator'
-    use 'tpope/vim-unimpaired'
-    use 'tpope/vim-commentary'
-    use 'tpope/vim-fugitive'
-    use {
+    },
+    'christoomey/vim-tmux-navigator',
+    'tpope/vim-unimpaired',
+    'tpope/vim-commentary',
+    'tpope/vim-fugitive',
+    {
         'lewis6991/gitsigns.nvim',
         config = function() require("gitsigns").setup({ numhl = true }) end
-    }
-    use {
+    },
+    {
         'hrsh7th/nvim-cmp',
-        requires = {
+        dependencies = {
             'neovim/nvim-lspconfig',
             'rafamadriz/friendly-snippets',
             'L3MON4D3/LuaSnip',
@@ -139,6 +149,8 @@ require('packer').startup(function(use)
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-nvim-lsp-signature-help',
             'onsails/lspkind-nvim',
+            'nvim-telescope/telescope.nvim',
+            'jose-elias-alvarez/null-ls.nvim',
         },
         config = function()
             local on_attach = function(_, bufnr)
@@ -161,7 +173,9 @@ require('packer').startup(function(use)
                 nmap('<leader>td', vim.lsp.buf.type_definition, 'Type [D]efinition')
                 nmap('<leader>ds', builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
                 nmap('<leader>ws', builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-                nmap("<leader>f", vim.lsp.buf.format, '[F]ormat')
+                nmap("F", vim.lsp.buf.format, '[F]ormat')
+                nmap("<silent>]d", vim.diagnostic.goto_next)
+                nmap("<silent>[d", vim.diagnostic.goto_prev)
 
                 -- See `:help K` for why this keymap
                 nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -186,14 +200,11 @@ require('packer').startup(function(use)
             local luasnip = require("luasnip")
             cmp.setup({
                 formatting = {
-                    format = function(_, vim_item)
-                        vim_item.kind = lspkind.presets.default[vim_item.kind]
-                        return vim_item
-                    end,
+                    format = lspkind.cmp_format({ with_text = false, maxwidth = 50 })
                 },
                 snippet = {
                     expand = function(args)
-                        vim.fn["vsnip#anonymous"](args.body)
+                        luasnip.lsp_expand(args.body)
                     end,
                 },
                 mapping = cmp.mapping.preset.insert {
@@ -280,11 +291,10 @@ require('packer').startup(function(use)
             end
 
         end
-    }
-
-    use {
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
-        requires = {
+        dependencies = {
             'nvim-treesitter/nvim-treesitter-refactor',
             'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/nvim-treesitter-context',
@@ -292,6 +302,7 @@ require('packer').startup(function(use)
         run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
         config = function()
             require("nvim-treesitter.configs").setup({
+                ensure_installed = { "lua", "python", "nix", "bash" },
                 highlight = {
                     enable = true,
                 },
@@ -346,34 +357,31 @@ require('packer').startup(function(use)
                 },
             })
         end
-    }
-
-    use {
+    },
+    {
         'nvim-telescope/telescope.nvim',
-        branch = '0.1.x',
-        requires = {
-            'nvim-telescope/telescope-file-browser.nvim',
-            'nvim-lua/plenary.nvim',
+        keys = {
+            { "<leader>fb", "<cmd>Telescope file_browser<cr>" },
+            { "<leader>ft", "<cmd>Telescope current_buffer_fuzzy_find<cr>" },
+            { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
+            { "<leader>ff", "<cmd>Telescope find_files<cr>" },
+            { "<leader>b", "<cmd>Telescope buffers<cr>" },
         },
         config = function()
             local telescope = require("telescope")
-            local builtin = require("telescope.builtin")
             telescope.setup()
             telescope.load_extension "file_browser"
-            vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser)
-            vim.keymap.set("n", "<leader>ft", builtin.current_buffer_fuzzy_find)
-            vim.keymap.set("n", "<silent>]d", vim.diagnostic.goto_next)
-            vim.keymap.set("n", "<silent>[d", vim.diagnostic.goto_prev)
-            vim.keymap.set("n", "<leader>fg", builtin.live_grep)
-            vim.keymap.set("n", "<leader>ff", builtin.find_files)
-            vim.keymap.set("n", "<leader>b", builtin.buffers)
         end,
-    }
-
-    use {
+        dependencies = {
+            'nvim-telescope/telescope-file-browser.nvim',
+            'nvim-lua/plenary.nvim',
+        },
+    },
+    {
         'nvim-lualine/lualine.nvim',
-        requires = {
+        dependencies = {
             'kyazdani42/nvim-web-devicons',
+            "github-nvim-theme",
         },
         config = function()
             require("lualine").setup({
@@ -410,10 +418,8 @@ require('packer').startup(function(use)
                 },
             })
         end,
-        after = "github-nvim-theme",
-    }
-
-    use {
+    },
+    {
         'projekt0n/github-nvim-theme',
         config = function()
             require("github-theme").setup({
@@ -431,17 +437,5 @@ require('packer').startup(function(use)
             vim.keymap.set("n", "<leader>cd", ":colorscheme github_dark_default<CR>", { noremap = true })
             vim.keymap.set("n", "<leader>cl", ":colorscheme github_light_default<CR>", { noremap = true })
         end
-    }
-
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-    command = 'source <afile> | PackerCompile',
-    group = packer_group,
-    pattern = vim.fn.expand '$MYVIMRC',
+    },
 })
