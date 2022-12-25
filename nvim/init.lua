@@ -49,7 +49,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
-    "tpope/vim-sleuth",
+    "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
         'jose-elias-alvarez/null-ls.nvim',
         lazy = true,
@@ -70,6 +70,8 @@ require("lazy").setup({
         "nvim-neotest/neotest",
         keys = {
             { '<leader>tn', function() require('neotest').run.run() end },
+            { '<leader>ts', function() require('neotest').summary.toggle() end },
+            { '<leader>tm', function() require('neotest').summary.run_marked() end },
         },
         dependencies = {
             "nvim-lua/plenary.nvim",
