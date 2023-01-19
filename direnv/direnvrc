@@ -1,2 +1,5 @@
-source $HOME/.nix-profile/share/nix-direnv/direnvrc
+NIX_DIRENVRC=$HOME/.nix-profile/share/nix-direnv/direnvrc
 
+if [ -f $NIX_DIRENVRC ]; then
+    source $NIX_DIRENVRC
+fi
