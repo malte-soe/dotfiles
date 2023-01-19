@@ -50,6 +50,15 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup(
     {
+        {
+            'lukas-reineke/indent-blankline.nvim',
+            config = function()
+                require("indent_blankline").setup {
+                    space_char_blankline = " ",
+                    show_current_context = true,
+                }
+            end,
+        },
         "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
         {
             'jose-elias-alvarez/null-ls.nvim',
