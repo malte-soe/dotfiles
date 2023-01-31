@@ -278,6 +278,7 @@ require("lazy").setup(
                 local lsps = {
                     "bashls",
                     "pyright",
+                    "ruff_lsp",
                     "rls",
                     "rnix",
                     "sumneko_lua",
