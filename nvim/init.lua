@@ -239,18 +239,24 @@ require("lazy").setup({
         },
         config = function()
             local on_attach = function(_, bufnr)
-                local nmap = function(keys, func, desc)
+                local map = function(keys, func, desc, mode)
                     if desc then
                         desc = "LSP: " .. desc
                     end
-
-                    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+                    vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = desc })
+                end
+                local nmap = function(keys, func, desc)
+                    map(keys, func, desc, "n")
+                end
+                local vmap = function(keys, func, desc)
+                    map(keys, func, desc, "v")
                 end
 
                 local builtin = require("telescope.builtin")
 
                 nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
                 nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+                vmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
                 nmap("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
                 nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
@@ -342,7 +348,6 @@ require("lazy").setup({
                 "ruff_lsp",
                 "rls",
                 "rnix",
-                "lua_ls",
                 {
                     server = "texlab",
                     cfg = {
