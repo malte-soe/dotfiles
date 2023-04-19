@@ -346,7 +346,7 @@ require("lazy").setup({
                 "bashls",
                 "pyright",
                 "ruff_lsp",
-                "rls",
+                "rust_analyzer",
                 "rnix",
                 {
                     server = "texlab",
