@@ -220,6 +220,13 @@ require("lazy").setup({
         end,
     },
     {
+        "simrat39/symbols-outline.nvim",
+        config = function()
+            require("symbols-outline").setup()
+            vim.keymap.set({ "n", "t" }, "<leader>o", "<CMD>SymbolsOutline<CR>")
+        end,
+    },
+    {
         "hrsh7th/nvim-cmp",
         dependencies = {
             "neovim/nvim-lspconfig",
