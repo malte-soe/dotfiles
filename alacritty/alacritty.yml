@@ -1,19 +1,17 @@
-draw_bold_text_with_bright_colors: true
-
 window:
   decorations: buttonless
-  opacity: 0.9
+  opacity: 1
 
 font:
   size: 14
   normal:
-    family: FiraCode Nerd Font
+    family: MesloLGL Nerd Font Mono
 
 scrolling:
   history: 0
 
 key_bindings:
-  - { key: N,              mods: Command,                    action: CreateNewWindow      }
+  - { key: N, mods: Command, action: CreateNewWindow }
 
 schemes:
   tokyonight_day: &light
