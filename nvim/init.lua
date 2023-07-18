@@ -50,6 +50,19 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
     {
+        'pwntester/octo.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+            'nvim-tree/nvim-web-devicons',
+        },
+        config = function ()
+            require"octo".setup({
+                use_local_fs = true,
+        })
+        end
+    },
+    {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("indent_blankline").setup({
@@ -592,7 +605,4 @@ require("lazy").setup({
         end,
     },
 }, {
-    defaults = {
-        version = "*",
-    },
 })
