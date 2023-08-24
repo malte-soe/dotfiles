@@ -49,6 +49,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
+    { "folke/neodev.nvim", opts = {} },
     {
         'pwntester/octo.nvim',
         requires = {
@@ -384,6 +385,7 @@ require("lazy").setup({
                         filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
                     },
                 },
+                "tsserver",
                 "rnix",
                 {
                     server = "texlab",
