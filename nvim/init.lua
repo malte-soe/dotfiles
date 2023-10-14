@@ -49,29 +49,6 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
-    { "folke/neodev.nvim", opts = {} },
-    {
-        'pwntester/octo.nvim',
-        requires = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-            'nvim-tree/nvim-web-devicons',
-        },
-        config = function ()
-            require"octo".setup({
-                use_local_fs = true,
-        })
-        end
-    },
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        config = function()
-            require("ibl").setup({
-                space_char_blankline = " ",
-                show_current_context = true,
-            })
-        end,
-    },
     "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
         "jose-elias-alvarez/null-ls.nvim",
@@ -229,7 +206,12 @@ require("lazy").setup({
         end,
     },
     "tpope/vim-unimpaired",
-    "tpope/vim-commentary",
+    {
+        "numToStr/Comment.nvim",
+        config = function()
+            require('Comment').setup()
+        end,
+    },
     "tpope/vim-fugitive",
     {
         "lewis6991/gitsigns.nvim",
@@ -241,13 +223,6 @@ require("lazy").setup({
         "zbirenbaum/copilot.lua",
         config = function()
             require("copilot").setup()
-        end,
-    },
-    {
-        "simrat39/symbols-outline.nvim",
-        config = function()
-            require("symbols-outline").setup()
-            vim.keymap.set({ "n", "t" }, "<leader>o", "<CMD>SymbolsOutline<CR>")
         end,
     },
     {
