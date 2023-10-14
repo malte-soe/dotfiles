@@ -51,7 +51,7 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
     "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         lazy = true,
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -239,7 +239,7 @@ require("lazy").setup({
             "hrsh7th/cmp-nvim-lsp-signature-help",
             "onsails/lspkind-nvim",
             "nvim-telescope/telescope.nvim",
-            "jose-elias-alvarez/null-ls.nvim",
+            "nvimtools/none-ls.nvim",
             "zbirenbaum/copilot.lua",
             "zbirenbaum/copilot-cmp",
         },
