@@ -3,7 +3,7 @@ window:
   opacity: 1
 
 font:
-  size: 14
+  size: 12
   normal:
     family: MonaspiceNe Nerd Font Mono
 
