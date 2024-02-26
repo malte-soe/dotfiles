@@ -17,6 +17,10 @@ if command --search nvim > /dev/null
     set -gx EDITOR nvim
 end
 
+if command --search zoxide > /dev/null
+    zoxide init fish | source
+end
+
 if command --search starship > /dev/null
     starship init fish | source
 end
@@ -24,12 +28,3 @@ end
 if command --search direnv > /dev/null
     eval (direnv hook fish)
 end
-
-function dark
-    sed -i '' 's/colors: \*light/colors: *dark/' ~/.config/alacritty/alacritty.yml; 
-end
-
-function light
-    sed -i '' 's/colors: \*dark/colors: *light/' ~/.config/alacritty/alacritty.yml;
-end
-
