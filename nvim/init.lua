@@ -468,20 +468,26 @@ require("lazy").setup({
     {
         "nvim-telescope/telescope.nvim",
         keys = {
-            { "<leader>fb", "<cmd>Telescope file_browser<cr>" },
             { "<leader>ft", "<cmd>Telescope current_buffer_fuzzy_find<cr>" },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
             { "<leader>ff", "<cmd>Telescope find_files<cr>" },
             { "<leader>b", "<cmd>Telescope buffers<cr>" },
+            { "<leader>fb", "<cmd>Telescope file_browser<cr>" },
+            { "<leader>u", "<cmd>Telescope undo<cr>" },
         },
         config = function()
             local telescope = require("telescope")
-            telescope.setup()
+            telescope.setup({
+                extensions = {
+                },
+            })
             telescope.load_extension("file_browser")
+            telescope.load_extension("undo")
         end,
         dependencies = {
-            "nvim-telescope/telescope-file-browser.nvim",
             "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope-file-browser.nvim",
+            "debugloop/telescope-undo.nvim",
         },
     },
     {
