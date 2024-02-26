@@ -51,21 +51,6 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
     "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
-        "nvimtools/none-ls.nvim",
-        lazy = true,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
-        config = function()
-            local null_ls = require("null-ls")
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.black,
-                },
-            })
-        end,
-    },
-    {
         "nvim-neotest/neotest",
         keys = {
             {
