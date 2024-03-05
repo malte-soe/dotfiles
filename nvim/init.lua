@@ -224,7 +224,6 @@ require("lazy").setup({
             "hrsh7th/cmp-nvim-lsp-signature-help",
             "onsails/lspkind-nvim",
             "nvim-telescope/telescope.nvim",
-            "nvimtools/none-ls.nvim",
             "zbirenbaum/copilot.lua",
             "zbirenbaum/copilot-cmp",
         },
