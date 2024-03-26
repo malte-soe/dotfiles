@@ -51,6 +51,16 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
     "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
+        "sourcegraph/sg.nvim",
+        dependencies = { 
+            "nvim-lua/plenary.nvim", 
+            "nvim-telescope/telescope.nvim"
+        },
+        config = function()
+            require("sg").setup()
+        end,
+    },
+    {
         "nvim-neotest/neotest",
         keys = {
             {
@@ -493,13 +503,10 @@ require("lazy").setup({
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "kyazdani42/nvim-web-devicons",
-            "folke/tokyonight.nvim",
+            "projekt0n/github-nvim-theme",
         },
         config = function()
             require("lualine").setup({
-                options = {
-                    theme = "tokyonight",
-                },
                 sections = {
                     lualine_b = {
                         "branch",
@@ -532,44 +539,15 @@ require("lazy").setup({
         end,
     },
     {
-        "folke/tokyonight.nvim",
+        "projekt0n/github-nvim-theme",
+        lazy = false, -- make sure we load this during startup if it is your main colorscheme
+        priority = 1000, -- make sure to load this before all the other start plugins
         config = function()
-            require("tokyonight").setup({
-                style = "night",
-                dim_inactive = true,
-                on_highlights = function(hl, c)
-                    local prompt = "#2d3149"
-                    hl.TelescopeNormal = {
-                        bg = c.bg_dark,
-                        fg = c.fg_dark,
-                    }
-                    hl.TelescopeBorder = {
-                        bg = c.bg_dark,
-                        fg = c.bg_dark,
-                    }
-                    hl.TelescopePromptNormal = {
-                        bg = prompt,
-                    }
-                    hl.TelescopePromptBorder = {
-                        bg = prompt,
-                        fg = prompt,
-                    }
-                    hl.TelescopePromptTitle = {
-                        bg = prompt,
-                        fg = prompt,
-                    }
-                    hl.TelescopePreviewTitle = {
-                        bg = c.bg_dark,
-                        fg = c.bg_dark,
-                    }
-                    hl.TelescopeResultsTitle = {
-                        bg = c.bg_dark,
-                        fg = c.bg_dark,
-                    }
-                end,
+            require('github-theme').setup({
+                dim_inactive = true,      -- Non focused panes set to alternative background
             })
-            vim.cmd([[colorscheme tokyonight]])
+            vim.cmd("colorscheme github_dark_default")
         end,
-    },
+    }
 }, {
 })
