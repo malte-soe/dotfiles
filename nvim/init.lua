@@ -355,7 +355,7 @@ require("lazy").setup({
                     },
                 },
                 "tsserver",
-                "rnix",
+                "nil_ls",
                 {
                     server = "texlab",
                     cfg = {
