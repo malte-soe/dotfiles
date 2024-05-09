@@ -87,6 +87,7 @@ require("lazy").setup({
             "nvim-treesitter/nvim-treesitter",
             "antoinemadec/FixCursorHold.nvim",
             "nvim-neotest/neotest-python",
+            "nvim-neotest/nvim-nio",
         },
         config = function()
             require("neotest").setup({
