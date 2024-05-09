@@ -345,7 +345,7 @@ require("lazy").setup({
             local lsps = {
                 "bashls",
                 "pyright",
-                "ruff_lsp",
+                "ruff",
                 "rust_analyzer",
                 "tailwindcss",
                 {
@@ -544,7 +544,10 @@ require("lazy").setup({
         priority = 1000, -- make sure to load this before all the other start plugins
         config = function()
             require('github-theme').setup({
-                dim_inactive = true,      -- Non focused panes set to alternative background
+                options = {
+                    transparent = true;
+                    dim_inactive = true,
+                }
             })
             vim.cmd("colorscheme github_dark_default")
         end,
