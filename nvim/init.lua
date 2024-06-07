@@ -51,16 +51,6 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
     "tpope/vim-sleuth", -- automatically adjust 'shiftwidth' and 'expandtab'
     {
-        "sourcegraph/sg.nvim",
-        dependencies = { 
-            "nvim-lua/plenary.nvim", 
-            "nvim-telescope/telescope.nvim"
-        },
-        config = function()
-            require("sg").setup()
-        end,
-    },
-    {
         "nvim-neotest/neotest",
         keys = {
             {
